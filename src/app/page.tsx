@@ -204,8 +204,8 @@ export default function WeddingTimeline() {
     0.62;
 
   // Better merge timing window
-  const MERGE_START = Math.min(0.9, firstDatePos + 0.1);
-  const MERGE_END = 1.0;
+  const MERGE_START = firstDatePos + 0.02;  // 2% after the first-date card
+  const MERGE_END = .9;
 
   // Pre-merge paths finish right when the merge begins
   const pathProgress = useTransform(scrollYProgress, [0, MERGE_START], [0, 1]);
