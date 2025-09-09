@@ -157,7 +157,7 @@ export default function WeddingTimeline() {
 
   // Start merge just after the first-date scroll band.
   // Nudge the offset (+0.03) if you want it later/earlier.
-  const MERGE_START       = Math.min(0.98, firstDatePos + 0.03);
+  const MERGE_START       = Math.min(0.98, firstDatePos + 0.13);
   const MERGE_FADE_START  = Math.min(0.98, firstDatePos + 0.01);
 
   const mergePathProgress = useTransform(scrollYProgress, [MERGE_START, 1], [0, 1]);
