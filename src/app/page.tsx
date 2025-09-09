@@ -84,9 +84,8 @@ const EVENTS = [
   },
 ];
 
-const X_CENTER_PCT = 0.28;      // same as before
-//const MEET_T = 0.78;            // fraction of SVG height where paths should meet (0..1)
-const MEET_T = 1.4;            // fraction of SVG height where paths should meet (0..1)
+const X_CENTER_PCT = 0.28;
+const MEET_T = 0.4; // fraction of SVG height where paths should meet (0..1)
 
 // -----------------------------------------
 // 2) SVG PATHS (undulating lines)
@@ -101,13 +100,16 @@ function buildWavyPath(
   const steps = 40;
   const pts: [number, number][] = [];
   for (let i = 0; i <= steps; i++) {
-    const t = i / steps;              // 0..1 over THIS path
-    const y = t * height;             // this path’s bottom == meet Y
+    const t = i / steps; // 0..1 over THIS path
+    const y = t * height; // this path’s bottom == meet Y
     const xCenter = width * X_CENTER_PCT;
 
     // Linear taper: amplitude -> 0 at t=1 (the meet)
     const taper = 1 - t;
-    const wave = Math.sin(t * Math.PI * frequency + phase) * amplitude * Math.max(0, taper);
+    const wave =
+      Math.sin(t * Math.PI * frequency + phase) *
+      amplitude *
+      Math.max(0, taper);
 
     const x = xCenter + wave;
     pts.push([x, y]);
@@ -122,24 +124,19 @@ function buildWavyPath(
 }
 
 function buildPartnerPath(width: number, height: number) {
-  return buildWavyPath(width, height * 0.8, Math.PI / 2, 210, 2.4);
+  return buildWavyPath(width, height * 0.8, Math.PI / 2, 110, 3.4);
 }
 function buildYouPath(width: number, height: number) {
-  return buildWavyPath(width, height * 0.8, 0, 190, 2.1);
+  return buildWavyPath(width, height * 0.8, 0, 90, 2.7);
 }
-function buildMergePath(width: number, height: number) {
-  const yStart = height * MEET_T;
-  const yEnd = height * 0.98;
-  const x = width * X_CENTER_PCT;
-  return `M ${x} ${yStart} C ${x + 60} ${yStart + 40}, ${x - 40} ${yEnd - 40}, ${x} ${yEnd}`;
-}
-
 
 // -----------------------------------------
 // 3) COMPONENT
 // -----------------------------------------
 export default function WeddingTimeline() {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const youPathRef = useRef<SVGPathElement | null>(null);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
@@ -149,32 +146,76 @@ export default function WeddingTimeline() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  // ⬇️ All motion hooks called unconditionally (top-level), not inside JSX
+  // Motion hooks
   const pathProgress = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const cardOpacity = useTransform(scrollYProgress, [0, 0.1, 1], [0, 1, 1]);
-  // Start the merge right after the first-date card shows up
+
+  // Start the merge after the first-date card
   const firstDatePos =
-    EVENTS.find(e => e.title.toLowerCase().includes("first date"))?.position ?? 0.62;
+    EVENTS.find((e) => e.title.toLowerCase().includes("first date"))?.position ??
+    0.62;
 
-  // Start merge just after the first-date scroll band.
-  // Nudge the offset (+0.03) if you want it later/earlier.
-  const MERGE_START       = Math.min(0.98, firstDatePos + 10.00);
-  const MERGE_FADE_START  = Math.min(0.98, firstDatePos + .01);
+  // Better merge timing window
+  const MERGE_START = Math.min(0.9, firstDatePos + 0.1);
+  const MERGE_END = 0.98;
+  const MERGE_FADE_START = Math.min(MERGE_END, MERGE_START + 0.01);
 
-  const mergePathProgress = useTransform(scrollYProgress, [MERGE_START, 1], [0, 1]);
-  const meetOpacity       = useTransform(scrollYProgress, [MERGE_FADE_START, MERGE_START + 0.08], [0, 1]);
-
+  const mergePathProgress = useTransform(
+    scrollYProgress,
+    [MERGE_START, MERGE_END],
+    [0, 1]
+  );
+  const meetOpacity = useTransform(
+    scrollYProgress,
+    [MERGE_FADE_START, MERGE_START + 0.08],
+    [0, 1]
+  );
 
   // Layout constants
   const SVG_WIDTH = 900;
-  //const SVG_HEIGHT = 2400;
   const SVG_HEIGHT = 5000;
-  
+
   const PATH_HEIGHT = MEET_T * SVG_HEIGHT; // stop exactly at meet Y
 
-  const youPath     = buildYouPath(SVG_WIDTH, PATH_HEIGHT);
+  const youPath = buildYouPath(SVG_WIDTH, PATH_HEIGHT);
   const partnerPath = buildPartnerPath(SVG_WIDTH, PATH_HEIGHT);
-  const mergePath = buildMergePath(SVG_WIDTH, SVG_HEIGHT);
+
+  // Merge path built from actual geometry (end point + tangent)
+  const [mergeD, setMergeD] = useState<string>("");
+
+  useEffect(() => {
+    if (!mounted || !youPathRef.current) return;
+
+    const el = youPathRef.current;
+    const len = el.getTotalLength();
+    const p = el.getPointAtLength(len);
+    const p2 = el.getPointAtLength(Math.max(0, len - 1)); // near-end for tangent
+
+    const dx = p.x - p2.x;
+    const dy = p.y - p2.y;
+    const mag = Math.hypot(dx, dy) || 1;
+    const ux = dx / mag;
+    const uy = dy / mag;
+
+    // First handle in the direction of the tangent for C1 continuity
+    const k1 = 80; // tweak to taste
+    const c1x = p.x + ux * k1;
+    const c1y = p.y + uy * k1;
+
+    // Target endpoint for the merge (near bottom, centered)
+    const xCenter = SVG_WIDTH * X_CENTER_PCT;
+    const yEnd = SVG_HEIGHT * 0.98;
+
+    // Second handle: pull gently toward the final endpoint
+    const c2x = xCenter;
+    const c2y = (p.y + yEnd) / 2;
+
+    const d = `M ${p.x} ${p.y} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${xCenter} ${yEnd}`;
+    setMergeD(d);
+  }, [mounted, SVG_WIDTH, SVG_HEIGHT]);
+
+  const X_CENTER = SVG_WIDTH * X_CENTER_PCT;
+  const Y_MEET = SVG_HEIGHT * MEET_T;
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -201,7 +242,7 @@ export default function WeddingTimeline() {
       </section>
 
       {/* Timeline Section */}
-      <section ref={containerRef} className="relative min-h-[300vh]">
+      <section ref={containerRef} className="relative min-h-[450vh]">
         {/* Sticky left column with SVG paths */}
         <div className="sticky top-0 h-screen pointer-events-none" suppressHydrationWarning>
           <div className="absolute inset-0 flex justify-center">
@@ -237,6 +278,7 @@ export default function WeddingTimeline() {
 
                 {/* Your path */}
                 <motion.path
+                  ref={youPathRef}
                   d={youPath}
                   fill="none"
                   stroke={COLORS.you}
@@ -246,25 +288,27 @@ export default function WeddingTimeline() {
                 />
 
                 {/* Merge path (post-meet) */}
-                <motion.path
-                  d={mergePath}
-                  fill="none"
-                  stroke={COLORS.merge}
-                  strokeWidth={10}
-                  strokeLinecap="round"
-                  style={{ pathLength: mergePathProgress }}
-                />
+                {mergeD && (
+                  <motion.path
+                    d={mergeD}
+                    fill="none"
+                    stroke={COLORS.merge}
+                    strokeWidth={10}
+                    strokeLinecap="round"
+                    style={{ pathLength: mergePathProgress }}
+                  />
+                )}
 
                 {/* Meet point */}
                 <motion.g style={{ opacity: meetOpacity }}>
-                <circle cx={SVG_WIDTH * X_CENTER_PCT} cy={SVG_HEIGHT * MEET_T} r={10} fill={COLORS.merge} />
-                <text
-                  x={SVG_WIDTH * X_CENTER_PCT + 16}
-                  y={SVG_HEIGHT * MEET_T + 4}
-                  className="fill-gray-500 text-[12px]"
-                >
-                  First date
-                </text>
+                  <circle cx={X_CENTER} cy={Y_MEET} r={10} fill={COLORS.merge} />
+                  <text
+                    x={X_CENTER + 16}
+                    y={Y_MEET + 4}
+                    className="fill-gray-500 text-[12px]"
+                  >
+                    First date
+                  </text>
                 </motion.g>
               </svg>
             )}
@@ -278,10 +322,16 @@ export default function WeddingTimeline() {
               key={e.id}
               style={{ opacity: cardOpacity }}
               className={`relative w-full md:w-[58ch] ${
-                e.side === "left" ? "md:ml-[5%]" : e.side === "right" ? "md:ml-[40%]" : "md:ml-[22%]"
+                e.side === "left"
+                  ? "md:ml-[5%]"
+                  : e.side === "right"
+                  ? "md:ml-[40%]"
+                  : "md:ml-[22%]"
               }`}
             >
-              <div style={{ height: `${Math.max(10, Math.round(e.position * 120))}vh` }} />
+              <div
+                style={{ height: `${Math.max(10, Math.round(e.position * 120))}vh` }}
+              />
               <Card className="shadow-lg border-0 rounded-2xl">
                 <CardContent className="p-5 md:p-7">
                   <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -290,7 +340,9 @@ export default function WeddingTimeline() {
                       {e.date}
                     </span>
                   </div>
-                  <h3 className="mt-1 text-xl md:text-2xl font-semibold tracking-tight">{e.title}</h3>
+                  <h3 className="mt-1 text-xl md:text-2xl font-semibold tracking-tight">
+                    {e.title}
+                  </h3>
                   <p className="mt-2 text-gray-600 leading-relaxed">{e.desc}</p>
                   <div className="mt-4 overflow-hidden rounded-xl">
                     <img src={e.img} alt="" className="w-full h-56 object-cover" />
@@ -308,7 +360,11 @@ export default function WeddingTimeline() {
                       }}
                     />
                     <span className="text-sm text-gray-500">
-                      {e.path === "you" ? "Your path" : e.path === "partner" ? "Partner's path" : "Together"}
+                      {e.path === "you"
+                        ? "Your path"
+                        : e.path === "partner"
+                        ? "Partner's path"
+                        : "Together"}
                     </span>
                   </div>
                 </CardContent>
@@ -317,16 +373,19 @@ export default function WeddingTimeline() {
           ))}
 
           {/* Spacer to allow full path animation */}
-          <div className="h-[60vh]" />
+          <div className="h-[120vh]" />
         </div>
       </section>
 
       {/* CTA / Wedding details */}
       <section className="bg-gray-50">
         <div className="max-w-4xl mx-auto px-6 py-20 text-center">
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Save the Date</h2>
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
+            Save the Date
+          </h2>
           <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
-            June 14, 2026 · Asbury Park, NJ · Ceremony on the boardwalk, reception to follow.
+            June 14, 2026 · Asbury Park, NJ · Ceremony on the boardwalk, reception
+            to follow.
           </p>
           <div className="mt-8 flex justify-center gap-4">
             <a href="#rsvp" className="px-5 py-3 rounded-2xl bg-black text-white font-medium shadow-lg">
