@@ -84,20 +84,35 @@ const EVENTS = [
   },
 ];
 
+const X_CENTER_PCT = 0.28;      // same as before
+const MEET_T = 0.78;            // fraction of SVG height where paths should meet (0..1)
+
 // -----------------------------------------
 // 2) SVG PATHS (undulating lines)
 // -----------------------------------------
-function buildWavyPath(width: number, height: number, phase = 0, amplitude = 60, frequency = 2) {
+function buildWavyPath(
+  width: number,
+  height: number,
+  phase = 0,
+  amplitude = 60,
+  frequency = 2
+) {
   const steps = 40;
   const pts: [number, number][] = [];
   for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
+    const t = i / steps;              // 0..1 vertical progress within this path
     const y = t * height;
-    const xCenter = width * 0.28;
-    const wave = Math.sin(t * Math.PI * frequency + phase) * amplitude * (1 - t * 0.35);
+    const xCenter = width * X_CENTER_PCT;
+
+    // Taper the wave so amplitude -> 0 by the meet point
+    const meetClamp = Math.min(1, (y / (MEET_T * height))); // 0..1 until y reaches meet Y
+    const taper = 1 - meetClamp;                            // 1 -> 0 as we approach meet
+    const wave = Math.sin(t * Math.PI * frequency + phase) * amplitude * Math.max(0, taper);
+
     const x = xCenter + wave;
     pts.push([x, y]);
   }
+
   let d = `M ${pts[0][0]} ${pts[0][1]}`;
   for (let i = 1; i < pts.length; i++) {
     const [x, y] = pts[i];
@@ -107,15 +122,15 @@ function buildWavyPath(width: number, height: number, phase = 0, amplitude = 60,
 }
 
 function buildPartnerPath(width: number, height: number) {
-  return buildWavyPath(width, height * 0.8, Math.PI / 2, 70, 2.2);
+  return buildWavyPath(width, height * 0.8, Math.PI / 2, 110, 2.4);
 }
 function buildYouPath(width: number, height: number) {
-  return buildWavyPath(width, height * 0.8, 0, 70, 2);
+  return buildWavyPath(width, height * 0.8, 0, 90, 2.1);
 }
 function buildMergePath(width: number, height: number) {
-  const yStart = height * 0.78;
+  const yStart = height * MEET_T;
   const yEnd = height * 0.98;
-  const x = width * 0.28;
+  const x = width * X_CENTER_PCT;
   return `M ${x} ${yStart} C ${x + 60} ${yStart + 40}, ${x - 40} ${yEnd - 40}, ${x} ${yEnd}`;
 }
 
@@ -136,8 +151,15 @@ export default function WeddingTimeline() {
   // ⬇️ All motion hooks called unconditionally (top-level), not inside JSX
   const pathProgress = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const cardOpacity = useTransform(scrollYProgress, [0, 0.1, 1], [0, 1, 1]);
-  const mergePathProgress = useTransform(scrollYProgress, [0.55, 1], [0, 1]);
-  const meetOpacity = useTransform(scrollYProgress, [0.55, 0.65], [0, 1]);
+  // Start the merge right after the first-date card shows up
+  const firstDatePos =
+    EVENTS.find(e => e.title.toLowerCase().includes("first date"))?.position ?? 0.62;
+
+  const MERGE_START     = Math.min(0.98, firstDatePos + 0.03); // when green line begins drawing
+  const MERGE_FADE_START= Math.min(0.98, firstDatePos + 0.01); // when the heart label starts fading in
+
+  const mergePathProgress = useTransform(scrollYProgress, [MERGE_START, 1], [0, 1]);
+  const meetOpacity       = useTransform(scrollYProgress, [MERGE_FADE_START, MERGE_START + 0.08], [0, 1]);
 
   // Layout constants
   const SVG_WIDTH = 900;
@@ -201,7 +223,7 @@ export default function WeddingTimeline() {
                   d={partnerPath}
                   fill="none"
                   stroke={COLORS.partner}
-                  strokeWidth={4}
+                  strokeWidth={8}
                   strokeLinecap="round"
                   style={{ pathLength: pathProgress }}
                 />
@@ -211,7 +233,7 @@ export default function WeddingTimeline() {
                   d={youPath}
                   fill="none"
                   stroke={COLORS.you}
-                  strokeWidth={4}
+                  strokeWidth={8}
                   strokeLinecap="round"
                   style={{ pathLength: pathProgress }}
                 />
@@ -221,21 +243,21 @@ export default function WeddingTimeline() {
                   d={mergePath}
                   fill="none"
                   stroke={COLORS.merge}
-                  strokeWidth={5}
+                  strokeWidth={10}
                   strokeLinecap="round"
                   style={{ pathLength: mergePathProgress }}
                 />
 
                 {/* Meet point */}
                 <motion.g style={{ opacity: meetOpacity }}>
-                  <circle cx={SVG_WIDTH * 0.28} cy={SVG_HEIGHT * 0.78} r={10} fill={COLORS.merge} />
-                  <text
-                    x={SVG_WIDTH * 0.28 + 16}
-                    y={SVG_HEIGHT * 0.78 + 4}
-                    className="fill-gray-500 text-[12px]"
-                  >
-                    First date
-                  </text>
+                <circle cx={SVG_WIDTH * X_CENTER_PCT} cy={SVG_HEIGHT * MEET_T} r={10} fill={COLORS.merge} />
+                <text
+                  x={SVG_WIDTH * X_CENTER_PCT + 16}
+                  y={SVG_HEIGHT * MEET_T + 4}
+                  className="fill-gray-500 text-[12px]"
+                >
+                  First date
+                </text>
                 </motion.g>
               </svg>
             )}
