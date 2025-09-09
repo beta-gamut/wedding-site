@@ -130,6 +130,58 @@ function buildYouPath(width: number, height: number) {
   return buildWavyPath(width, height * 0.8, 0, 90, 2.7);
 }
 
+// Smooth, undulating merge using Catmull–Rom -> cubic Bézier
+function buildMergeWavyFromStart(
+  width: number,
+  svgHeight: number,
+  startY: number,
+  amplitude = 70,
+  frequency = 2.2,
+  steps = 100,     // a bit higher for extra smoothness
+  tension = 0.5    // 0..1, Catmull–Rom alpha (0.5 is centripetal-ish)
+) {
+  const xCenter = width * X_CENTER_PCT;
+  const yEnd = svgHeight * 0.98;
+  const ySpan = Math.max(1, yEnd - startY);
+
+  // 1) sample points along a decaying sine like before
+  const pts: [number, number][] = [];
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;              // 0..1 along the merge
+    const y = startY + t * ySpan;
+    const taper = 1 - t;              // fade amplitude to 0
+    const wave = Math.sin(t * Math.PI * frequency) * amplitude * taper;
+    const x = xCenter + wave;
+    pts.push([x, y]);
+  }
+
+  // 2) build Bézier path using Catmull–Rom smoothing
+  if (pts.length < 2) return "";
+
+  // Helper to get point with clamping at ends
+  const P = (i: number) => pts[Math.max(0, Math.min(pts.length - 1, i))];
+
+  let d = `M ${pts[0][0]} ${pts[0][1]}`;
+
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = P(i - 1);
+    const p1 = P(i);
+    const p2 = P(i + 1);
+    const p3 = P(i + 2);
+
+    // Catmull–Rom to cubic Bézier control points
+    const c1x = p1[0] + (p2[0] - p0[0]) * (tension / 6);
+    const c1y = p1[1] + (p2[1] - p0[1]) * (tension / 6);
+    const c2x = p2[0] - (p3[0] - p1[0]) * (tension / 6);
+    const c2y = p2[1] - (p3[1] - p1[1]) * (tension / 6);
+
+    // segment to p2 (the next knot)
+    d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2[0]} ${p2[1]}`;
+  }
+
+  return d;
+}
+
 // -----------------------------------------
 // 3) COMPONENT
 // -----------------------------------------
@@ -158,18 +210,13 @@ export default function WeddingTimeline() {
   // Better merge timing window
   const MERGE_START = Math.min(0.9, firstDatePos + 0.1);
   const MERGE_END = 0.98;
-  const MERGE_FADE_START = Math.min(MERGE_END, MERGE_START + 0.01);
 
   const mergePathProgress = useTransform(
     scrollYProgress,
     [MERGE_START, MERGE_END],
     [0, 1]
   );
-  const meetOpacity = useTransform(
-    scrollYProgress,
-    [MERGE_FADE_START, MERGE_START + 0.08],
-    [0, 1]
-  );
+  const meetOpacity = useTransform(mergePathProgress, [0, 0.1], [0, 1]);
 
   // Layout constants
   const SVG_WIDTH = 900;
@@ -180,42 +227,30 @@ export default function WeddingTimeline() {
   const youPath = buildYouPath(SVG_WIDTH, PATH_HEIGHT);
   const partnerPath = buildPartnerPath(SVG_WIDTH, PATH_HEIGHT);
 
-  // Merge path built from actual geometry (end point + tangent)
+  // Merge path built from geometry
   const [mergeD, setMergeD] = useState<string>("");
+  const [mergeStart, setMergeStart] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     if (!mounted || !youPathRef.current) return;
 
     const el = youPathRef.current;
     const len = el.getTotalLength();
-    const p = el.getPointAtLength(len);
-    const p2 = el.getPointAtLength(Math.max(0, len - 1)); // near-end for tangent
+    const p = el.getPointAtLength(len); // actual merge start from the "you" path
 
-    const dx = p.x - p2.x;
-    const dy = p.y - p2.y;
-    const mag = Math.hypot(dx, dy) || 1;
-    const ux = dx / mag;
-    const uy = dy / mag;
+    // Build an undulating merge that starts at p.y and tapers to center near the bottom
+    const d = buildMergeWavyFromStart(
+      SVG_WIDTH,
+      SVG_HEIGHT,
+      p.y,
+      70,   // amplitude (adjust 50–90)
+      2.2,  // frequency (adjust 1.8–3.2)
+      100   // steps for smoothness
+    );
 
-    // First handle in the direction of the tangent for C1 continuity
-    const k1 = 80; // tweak to taste
-    const c1x = p.x + ux * k1;
-    const c1y = p.y + uy * k1;
-
-    // Target endpoint for the merge (near bottom, centered)
-    const xCenter = SVG_WIDTH * X_CENTER_PCT;
-    const yEnd = SVG_HEIGHT * 0.98;
-
-    // Second handle: pull gently toward the final endpoint
-    const c2x = xCenter;
-    const c2y = (p.y + yEnd) / 2;
-
-    const d = `M ${p.x} ${p.y} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${xCenter} ${yEnd}`;
     setMergeD(d);
+    setMergeStart({ x: p.x, y: p.y });
   }, [mounted, SVG_WIDTH, SVG_HEIGHT]);
-
-  const X_CENTER = SVG_WIDTH * X_CENTER_PCT;
-  const Y_MEET = SVG_HEIGHT * MEET_T;
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -299,19 +334,21 @@ export default function WeddingTimeline() {
                   />
                 )}
 
-                {/* Meet point */}
-                <motion.g style={{ opacity: meetOpacity }}>
-                  <circle cx={X_CENTER} cy={Y_MEET} r={10} fill={COLORS.merge} />
-                  <text
-                    x={X_CENTER + 16}
-                    y={Y_MEET + 4}
-                    className="fill-gray-500 text-[12px]"
-                  >
-                    First date
-                  </text>
-                </motion.g>
-              </svg>
-            )}
+                {/* Meet point (at merge start) */}
+                {mergeStart && (
+                  <motion.g style={{ opacity: meetOpacity }}>
+                    <circle cx={mergeStart.x} cy={mergeStart.y} r={10} fill={COLORS.merge} />
+                    <text
+                      x={mergeStart.x + 16}
+                      y={mergeStart.y + 4}
+                      className="fill-gray-500 text-[12px]"
+                    >
+                      First date
+                    </text>
+                  </motion.g>
+                )}
+              </svg>   {/* ✅ close the SVG */}
+            )}         {/* ✅ close the mounted && (…) */}
           </div>
         </div>
 
@@ -329,9 +366,7 @@ export default function WeddingTimeline() {
                   : "md:ml-[22%]"
               }`}
             >
-              <div
-                style={{ height: `${Math.max(10, Math.round(e.position * 120))}vh` }}
-              />
+              <div style={{ height: `${Math.max(10, Math.round(e.position * 120))}vh` }} />
               <Card className="shadow-lg border-0 rounded-2xl">
                 <CardContent className="p-5 md:p-7">
                   <div className="flex items-center gap-2 text-sm text-gray-500">
