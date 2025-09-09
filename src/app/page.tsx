@@ -100,13 +100,12 @@ function buildWavyPath(
   const steps = 40;
   const pts: [number, number][] = [];
   for (let i = 0; i <= steps; i++) {
-    const t = i / steps;              // 0..1 vertical progress within this path
-    const y = t * height;
+    const t = i / steps;              // 0..1 over THIS path
+    const y = t * height;             // this path’s bottom == meet Y
     const xCenter = width * X_CENTER_PCT;
 
-    // Taper the wave so amplitude -> 0 by the meet point
-    const meetClamp = Math.min(1, (y / (MEET_T * height))); // 0..1 until y reaches meet Y
-    const taper = 1 - meetClamp;                            // 1 -> 0 as we approach meet
+    // Linear taper: amplitude -> 0 at t=1 (the meet)
+    const taper = 1 - t;
     const wave = Math.sin(t * Math.PI * frequency + phase) * amplitude * Math.max(0, taper);
 
     const x = xCenter + wave;
@@ -164,9 +163,10 @@ export default function WeddingTimeline() {
   // Layout constants
   const SVG_WIDTH = 900;
   const SVG_HEIGHT = 2400;
+  const PATH_HEIGHT = MEET_T * SVG_HEIGHT; // stop exactly at meet Y
 
-  const youPath = buildYouPath(SVG_WIDTH, SVG_HEIGHT);
-  const partnerPath = buildPartnerPath(SVG_WIDTH, SVG_HEIGHT);
+  const youPath     = buildYouPath(SVG_WIDTH, PATH_HEIGHT);
+  const partnerPath = buildPartnerPath(SVG_WIDTH, PATH_HEIGHT);
   const mergePath = buildMergePath(SVG_WIDTH, SVG_HEIGHT);
 
   return (
