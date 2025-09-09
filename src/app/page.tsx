@@ -138,7 +138,7 @@ function buildMergeWavyFromStart(
   amplitude = 70,
   frequency = 2.2, //default values
   steps = 100,     // a bit higher for extra smoothness
-  phase = 0        // phase offset in radians
+  phase = 0,        // phase offset in radians
   tension = 0.5    // 0..1, Catmull–Rom alpha (0.5 is centripetal-ish)
 ) {
   const xCenter = width * X_CENTER_PCT;
