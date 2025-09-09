@@ -136,8 +136,9 @@ function buildMergeWavyFromStart(
   svgHeight: number,
   startY: number,
   amplitude = 70,
-  frequency = 2.2,
+  frequency = 2.2, //default values
   steps = 100,     // a bit higher for extra smoothness
+  phase = 0        // phase offset in radians
   tension = 0.5    // 0..1, Catmull–Rom alpha (0.5 is centripetal-ish)
 ) {
   const xCenter = width * X_CENTER_PCT;
@@ -150,7 +151,7 @@ function buildMergeWavyFromStart(
     const t = i / steps;              // 0..1 along the merge
     const y = startY + t * ySpan;
     const taper = 1 - t;              // fade amplitude to 0
-    const wave = Math.sin(t * Math.PI * frequency) * amplitude * taper;
+    const wave = Math.sin(t * Math.PI * frequency + phase) * amplitude * taper;
     const x = xCenter + wave;
     pts.push([x, y]);
   }
@@ -256,7 +257,8 @@ export default function WeddingTimeline() {
       SVG_HEIGHT,
       p.y,
       70,   // amplitude (adjust 50–90)
-      2.2,  // frequency (adjust 1.8–3.2)
+      5,  // frequency (adjust 1.8–3.2)
+      Math.PI, // phase (try 0, Math.PI/2, Math.PI, etc.)
       100   // steps for smoothness
     );
 
