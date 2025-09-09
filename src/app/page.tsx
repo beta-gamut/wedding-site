@@ -347,8 +347,8 @@ export default function WeddingTimeline() {
                     </text>
                   </motion.g>
                 )}
-              </svg>   {/* ✅ close the SVG */}
-            )}         {/* ✅ close the mounted && (…) */}
+              </svg>   
+            )}         
           </div>
         </div>
 
