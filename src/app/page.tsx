@@ -205,7 +205,7 @@ export default function WeddingTimeline() {
 
   // Better merge timing window
   const MERGE_START = Math.min(0.9, firstDatePos + 0.1);
-  const MERGE_END = 0.1;
+  const MERGE_END = 1.0;
 
   // Pre-merge paths finish right when the merge begins
   const pathProgress = useTransform(scrollYProgress, [0, MERGE_START], [0, 1]);
@@ -300,6 +300,15 @@ export default function WeddingTimeline() {
                 viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
                 className="h-full"
               >
+                  <defs>
+                  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
                 {/* Faint vertical grid for elegance */}
                 {[0.28, 0.62].map((xPct, i) => (
                   <line
@@ -318,7 +327,7 @@ export default function WeddingTimeline() {
                   d={partnerPath}
                   fill="none"
                   stroke={COLORS.partner}
-                  strokeWidth={12}
+                  strokeWidth={8}
                   strokeLinecap="round"
                   vectorEffect="non-scaling-stroke"
                   filter="url(#glow)"
@@ -331,7 +340,7 @@ export default function WeddingTimeline() {
                   d={youPath}
                   fill="none"
                   stroke={COLORS.you}
-                  strokeWidth={12}
+                  strokeWidth={8}
                   strokeLinecap="round"
                   vectorEffect="non-scaling-stroke"
                   filter="url(#glow)"
@@ -344,7 +353,7 @@ export default function WeddingTimeline() {
                     d={mergeD}
                     fill="none"
                     stroke={COLORS.merge}
-                    strokeWidth={14}
+                    strokeWidth={8}
                     strokeLinecap="round"
                     vectorEffect="non-scaling-stroke"
                     filter="url(#glow)"
