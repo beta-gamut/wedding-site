@@ -133,6 +133,7 @@ function buildMergePath(width: number, height: number) {
   return `M ${x} ${yStart} C ${x + 60} ${yStart + 40}, ${x - 40} ${yEnd - 40}, ${x} ${yEnd}`;
 }
 
+
 // -----------------------------------------
 // 3) COMPONENT
 // -----------------------------------------
@@ -154,11 +155,14 @@ export default function WeddingTimeline() {
   const firstDatePos =
     EVENTS.find(e => e.title.toLowerCase().includes("first date"))?.position ?? 0.62;
 
-  const MERGE_START     = Math.min(0.98, firstDatePos + 0.03); // when green line begins drawing
-  const MERGE_FADE_START= Math.min(0.98, firstDatePos + 0.01); // when the heart label starts fading in
+  // Start merge just after the first-date scroll band.
+  // Nudge the offset (+0.03) if you want it later/earlier.
+  const MERGE_START       = Math.min(0.98, firstDatePos + 0.03);
+  const MERGE_FADE_START  = Math.min(0.98, firstDatePos + 0.01);
 
   const mergePathProgress = useTransform(scrollYProgress, [MERGE_START, 1], [0, 1]);
   const meetOpacity       = useTransform(scrollYProgress, [MERGE_FADE_START, MERGE_START + 0.08], [0, 1]);
+
 
   // Layout constants
   const SVG_WIDTH = 900;
