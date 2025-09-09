@@ -95,7 +95,7 @@ function buildWavyPath(
   width: number,
   height: number,
   phase = 0,
-  amplitude = 150,
+  amplitude = 240,
   frequency = 2
 ) {
   const steps = 40;
@@ -122,10 +122,10 @@ function buildWavyPath(
 }
 
 function buildPartnerPath(width: number, height: number) {
-  return buildWavyPath(width, height * 0.8, Math.PI / 2, 110, 2.4);
+  return buildWavyPath(width, height * 0.8, Math.PI / 2, 210, 2.4);
 }
 function buildYouPath(width: number, height: number) {
-  return buildWavyPath(width, height * 0.8, 0, 90, 2.1);
+  return buildWavyPath(width, height * 0.8, 0, 190, 2.1);
 }
 function buildMergePath(width: number, height: number) {
   const yStart = height * MEET_T;
@@ -167,7 +167,9 @@ export default function WeddingTimeline() {
 
   // Layout constants
   const SVG_WIDTH = 900;
-  const SVG_HEIGHT = 2400;
+  //const SVG_HEIGHT = 2400;
+  const SVG_HEIGHT = 5000;
+  
   const PATH_HEIGHT = MEET_T * SVG_HEIGHT; // stop exactly at meet Y
 
   const youPath     = buildYouPath(SVG_WIDTH, PATH_HEIGHT);
