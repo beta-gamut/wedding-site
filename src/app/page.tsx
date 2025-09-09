@@ -221,11 +221,21 @@ export default function WeddingTimeline() {
   // (Optional) also fade the merge path itself for a softer start
   const mergeOpacity = useTransform(mergePathProgress, [0, 0.02], [0, 1]);
   // Layout constants
-  const SVG_WIDTH = 900;
-  const SVG_HEIGHT = 5000;
+//  const SVG_WIDTH = 900;
+//  const SVG_HEIGHT = 5000;
 
-  const PATH_HEIGHT = MEET_T * SVG_HEIGHT; // stop exactly at meet Y
+//  const PATH_HEIGHT = MEET_T * SVG_HEIGHT; // stop exactly at meet Y
 
+ const SVG_WIDTH = 900;
+ // Pick where the two paths meet, in absolute SVG units:
+ const MEET_Y = 1800;         // ← adjust to taste (was ~MEET_T * SVG_HEIGHT)
+ // Pick how long the green merge should be, in SVG units:
+ const MERGE_LENGTH = 1600;   // ← “half length” feel; adjust to taste
+ // Total canvas height so the merge ends exactly at the bottom:
+ const SVG_HEIGHT = MEET_Y + MERGE_LENGTH;
+
+ const PATH_HEIGHT = MEET_Y;   // the pre-merge paths end exactly at MEET_Y
+//
   const youPath = buildYouPath(SVG_WIDTH, PATH_HEIGHT);
   const partnerPath = buildPartnerPath(SVG_WIDTH, PATH_HEIGHT);
 
