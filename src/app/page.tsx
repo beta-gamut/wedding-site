@@ -198,10 +198,6 @@ export default function WeddingTimeline() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  // Motion hooks
-  const pathProgress = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const cardOpacity = useTransform(scrollYProgress, [0, 0.1, 1], [0, 1, 1]);
-
   // Start the merge after the first-date card
   const firstDatePos =
     EVENTS.find((e) => e.title.toLowerCase().includes("first date"))?.position ??
@@ -211,13 +207,19 @@ export default function WeddingTimeline() {
   const MERGE_START = Math.min(0.9, firstDatePos + 0.1);
   const MERGE_END = 0.98;
 
+  // Pre-merge paths finish right when the merge begins
+  const pathProgress = useTransform(scrollYProgress, [0, MERGE_START], [0, 1]);
+  const cardOpacity = useTransform(scrollYProgress, [0, 0.1, 1], [0, 1, 1]);
+
   const mergePathProgress = useTransform(
     scrollYProgress,
     [MERGE_START, MERGE_END],
     [0, 1]
   );
+  // Fade the marker in with the merge
   const meetOpacity = useTransform(mergePathProgress, [0, 0.1], [0, 1]);
-
+  // (Optional) also fade the merge path itself for a softer start
+  const mergeOpacity = useTransform(mergePathProgress, [0, 0.02], [0, 1]);
   // Layout constants
   const SVG_WIDTH = 900;
   const SVG_HEIGHT = 5000;
@@ -330,7 +332,7 @@ export default function WeddingTimeline() {
                     stroke={COLORS.merge}
                     strokeWidth={10}
                     strokeLinecap="round"
-                    style={{ pathLength: mergePathProgress }}
+                    style={{ pathLength: mergePathProgress, opacity: mergeOpacity }}
                   />
                 )}
 
