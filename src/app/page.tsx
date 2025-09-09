@@ -85,7 +85,8 @@ const EVENTS = [
 ];
 
 const X_CENTER_PCT = 0.28;      // same as before
-const MEET_T = 0.78;            // fraction of SVG height where paths should meet (0..1)
+//const MEET_T = 0.78;            // fraction of SVG height where paths should meet (0..1)
+const MEET_T = 0.82;            // fraction of SVG height where paths should meet (0..1)
 
 // -----------------------------------------
 // 2) SVG PATHS (undulating lines)
@@ -94,7 +95,7 @@ function buildWavyPath(
   width: number,
   height: number,
   phase = 0,
-  amplitude = 90,
+  amplitude = 150,
   frequency = 2
 ) {
   const steps = 40;
