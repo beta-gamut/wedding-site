@@ -85,7 +85,7 @@ const EVENTS = [
 ];
 
 const X_CENTER_PCT = 0.28;
-const MEET_T = 0.4; // fraction of SVG height where paths should meet (0..1)
+//const MEET_T = 0.4; // fraction of SVG height where paths should meet (0..1)
 
 // -----------------------------------------
 // 2) SVG PATHS (undulating lines)
@@ -124,10 +124,10 @@ function buildWavyPath(
 }
 
 function buildPartnerPath(width: number, height: number) {
-  return buildWavyPath(width, height * 0.8, Math.PI / 2, 110, 3.4);
+  return buildWavyPath(width, height * 0.8, Math.PI / 2, 150, 3.2);
 }
 function buildYouPath(width: number, height: number) {
-  return buildWavyPath(width, height * 0.8, 0, 90, 2.7);
+  return buildWavyPath(width, height * 0.8, 0, 125, 2.5);
 }
 
 // Smooth, undulating merge using Catmull–Rom -> cubic Bézier
@@ -141,7 +141,7 @@ function buildMergeWavyFromStart(
   tension = 0.5    // 0..1, Catmull–Rom alpha (0.5 is centripetal-ish)
 ) {
   const xCenter = width * X_CENTER_PCT;
-  const yEnd = svgHeight * 0.98;
+  const yEnd = svgHeight - 20;
   const ySpan = Math.max(1, yEnd - startY);
 
   // 1) sample points along a decaying sine like before
@@ -205,7 +205,7 @@ export default function WeddingTimeline() {
 
   // Better merge timing window
   const MERGE_START = Math.min(0.9, firstDatePos + 0.1);
-  const MERGE_END = 0.98;
+  const MERGE_END = 0.1;
 
   // Pre-merge paths finish right when the merge begins
   const pathProgress = useTransform(scrollYProgress, [0, MERGE_START], [0, 1]);
@@ -318,8 +318,10 @@ export default function WeddingTimeline() {
                   d={partnerPath}
                   fill="none"
                   stroke={COLORS.partner}
-                  strokeWidth={8}
+                  strokeWidth={12}
                   strokeLinecap="round"
+                  vectorEffect="non-scaling-stroke"
+                  filter="url(#glow)"
                   style={{ pathLength: pathProgress }}
                 />
 
@@ -329,8 +331,10 @@ export default function WeddingTimeline() {
                   d={youPath}
                   fill="none"
                   stroke={COLORS.you}
-                  strokeWidth={8}
+                  strokeWidth={12}
                   strokeLinecap="round"
+                  vectorEffect="non-scaling-stroke"
+                  filter="url(#glow)"
                   style={{ pathLength: pathProgress }}
                 />
 
@@ -340,8 +344,10 @@ export default function WeddingTimeline() {
                     d={mergeD}
                     fill="none"
                     stroke={COLORS.merge}
-                    strokeWidth={10}
+                    strokeWidth={14}
                     strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                    filter="url(#glow)"
                     style={{ pathLength: mergePathProgress, opacity: mergeOpacity }}
                   />
                 )}
