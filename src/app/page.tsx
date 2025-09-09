@@ -9,9 +9,9 @@ import { Heart, MapPin, Camera } from "lucide-react";
 // 1) CONFIG
 // -----------------------------------------
 const COLORS = {
-  you: "#4F46E5",
-  partner: "#EC4899",
-  merge: "#10B981",
+  you: "#0d00ffff",
+  partner: "#cd28ffff",
+  merge: "#035e40ff",
   grid: "#E5E7EB",
 };
 
@@ -94,7 +94,7 @@ function buildWavyPath(
   width: number,
   height: number,
   phase = 0,
-  amplitude = 60,
+  amplitude = 90,
   frequency = 2
 ) {
   const steps = 40;
@@ -157,8 +157,8 @@ export default function WeddingTimeline() {
 
   // Start merge just after the first-date scroll band.
   // Nudge the offset (+0.03) if you want it later/earlier.
-  const MERGE_START       = Math.min(0.98, firstDatePos + 10.13);
-  const MERGE_FADE_START  = Math.min(0.98, firstDatePos + 10.01);
+  const MERGE_START       = Math.min(0.98, firstDatePos + 10.00);
+  const MERGE_FADE_START  = Math.min(0.98, firstDatePos + .01);
 
   const mergePathProgress = useTransform(scrollYProgress, [MERGE_START, 1], [0, 1]);
   const meetOpacity       = useTransform(scrollYProgress, [MERGE_FADE_START, MERGE_START + 0.08], [0, 1]);
