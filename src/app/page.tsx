@@ -135,51 +135,42 @@ function buildMergeWavyFromStart(
   width: number,
   svgHeight: number,
   startY: number,
+  startX: number,          // NEW: exact merge-start X (p.x)
   amplitude = 70,
-  frequency = 2.2, //default values
-  steps = 100,     // a bit higher for extra smoothness
-  phase = 0,        // phase offset in radians
-  tension = 0.5    // 0..1, Catmull–Rom alpha (0.5 is centripetal-ish)
+  frequency = 2.2,
+  phase = 0,               // phase offset in radians
+  steps = 100,             // sampling density
+  tension = 0.5            // Catmull–Rom tension (0..1)
 ) {
   const xCenter = width * X_CENTER_PCT;
   const yEnd = svgHeight - 20;
   const ySpan = Math.max(1, yEnd - startY);
 
-  // 1) sample points along a decaying sine like before
   const pts: [number, number][] = [];
   for (let i = 0; i <= steps; i++) {
-    const t = i / steps;              // 0..1 along the merge
+    const t = i / steps;                    // 0..1 along merge
     const y = startY + t * ySpan;
-    const taper = 1 - t;              // fade amplitude to 0
+    const taper = 1 - t;                    // fade amplitude to 0
     const wave = Math.sin(t * Math.PI * frequency + phase) * amplitude * taper;
-    const x = xCenter + wave;
+
+    // Force the first point to be EXACTLY the path end (no lateral jump)
+    const x = i === 0 ? startX : xCenter + wave;
     pts.push([x, y]);
   }
 
-  // 2) build Bézier path using Catmull–Rom smoothing
   if (pts.length < 2) return "";
 
-  // Helper to get point with clamping at ends
-  const P = (i: number) => pts[Math.max(0, Math.min(pts.length - 1, i))];
+  const P = (k: number) => pts[Math.max(0, Math.min(pts.length - 1, k))];
 
   let d = `M ${pts[0][0]} ${pts[0][1]}`;
-
   for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = P(i - 1);
-    const p1 = P(i);
-    const p2 = P(i + 1);
-    const p3 = P(i + 2);
-
-    // Catmull–Rom to cubic Bézier control points
+    const p0 = P(i - 1), p1 = P(i), p2 = P(i + 1), p3 = P(i + 2);
     const c1x = p1[0] + (p2[0] - p0[0]) * (tension / 6);
     const c1y = p1[1] + (p2[1] - p0[1]) * (tension / 6);
     const c2x = p2[0] - (p3[0] - p1[0]) * (tension / 6);
     const c2y = p2[1] - (p3[1] - p1[1]) * (tension / 6);
-
-    // segment to p2 (the next knot)
     d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2[0]} ${p2[1]}`;
   }
-
   return d;
 }
 
@@ -205,18 +196,14 @@ export default function WeddingTimeline() {
     0.62;
 
   // Better merge timing window
-  const MERGE_START = firstDatePos + 0.02;  // 2% after the first-date card
-  const MERGE_END = .9;
+  const MERGE_START = firstDatePos;
+  const MERGE_END   = 0.95; // or 1.0 if you want it to finish right at the end
 
   // Pre-merge paths finish right when the merge begins
   const pathProgress = useTransform(scrollYProgress, [0, MERGE_START], [0, 1]);
   const cardOpacity = useTransform(scrollYProgress, [0, 0.1, 1], [0, 1, 1]);
 
-  const mergePathProgress = useTransform(
-    scrollYProgress,
-    [MERGE_START, MERGE_END],
-    [0, 1]
-  );
+  const mergePathProgress = useTransform(scrollYProgress,[MERGE_START, MERGE_END],[0, 1]);
   // Fade the marker in with the merge
   const meetOpacity = useTransform(mergePathProgress, [0, 0.1], [0, 1]);
   // (Optional) also fade the merge path itself for a softer start
@@ -249,17 +236,18 @@ export default function WeddingTimeline() {
 
     const el = youPathRef.current;
     const len = el.getTotalLength();
-    const p = el.getPointAtLength(len); // actual merge start from the "you" path
+    const p = el.getPointAtLength(len); // merge start
 
-    // Build an undulating merge that starts at p.y and tapers to center near the bottom
     const d = buildMergeWavyFromStart(
       SVG_WIDTH,
       SVG_HEIGHT,
       p.y,
-      70,   // amplitude (adjust 50–90)
-      5,  // frequency (adjust 1.8–3.2)
-      Math.PI, // phase (try 0, Math.PI/2, Math.PI, etc.)
-      100   // steps for smoothness
+      p.x,           // NEW: pass exact start X
+      70,            // amplitude
+      5,             // frequency (faster wiggle)
+      Math.PI,       // phase (flip initial direction if desired)
+      120,           // steps (a bit smoother)
+      0.5            // tension
     );
 
     setMergeD(d);
