@@ -244,24 +244,25 @@ export default function WeddingTimeline() {
 
                 {/* Partner path */}
                <motion.path
-  d={partnerPath}
-  fill="none"
-  stroke={COLORS.partner}
-  strokeWidth={10}
-  mask="url(#clothMask)"   // << NEW
-  filter="url(#glow)"      // keep glow if you want
-  style={{ pathLength: pathProgress }}
-/>
+                d={partnerPath}
+                fill="none"
+                stroke={COLORS.partner}
+                strokeWidth={14}
+                filter="url(#fabricTexture)"  // << NEW
+                filter="url(#glow)"      // keep glow if you want
+                style={{ pathLength: pathProgress }}
+              />
 
                 {/* Your path */}
-             <motion.path
-  d={youPath}
-  fill="none"
-  stroke={COLORS.you}
-  strokeWidth={10}
-  filter="url(#fabricTexture)"  // << NEW
-  style={{ pathLength: pathProgress }}
-/>
+                <motion.path
+                  d={youPath}
+                  fill="none"
+                  stroke={COLORS.you}
+                  strokeWidth={14}
+                  filter="url(#fabricTexture)"  // << NEW
+                  filter="url(#glow)"      // keep glow if you want
+                  style={{ pathLength: pathProgress }}
+                />
 
                 {/* Merge path (post-meet) */}
                 {mergeD && (
