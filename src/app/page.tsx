@@ -236,10 +236,17 @@ export default function WeddingTimeline() {
   <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" seed="7" result="noise">
     <animate attributeName="baseFrequency" values="0.015;0.03;0.02" dur="10s" repeatCount="indefinite"/>
   </feTurbulence>
-  <feDisplacementMap in="SourceAlpha" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" result="displacedAlpha"/>
-  <feGaussianBlur in="displacedAlpha" stdDeviation="15" result="smokeAlpha"/>
-  <feFlood flood-color="currentColor" flood-opacity="1" result="tint"/>
-  <feComposite in="tint" in2="smokeAlpha" operator="in" result="coloredSmoke"/>
+  <feDisplacementMap in="SourceAlpha" in2="noise" scale="24"
+                     xChannelSelector="R" yChannelSelector="G"
+                     result="displacedAlpha"/>
+  <feGaussianBlur in="displacedAlpha" stdDeviation="22" result="smokeAlpha"/>
+ <feColorMatrix in="SourceGraphic" type="matrix" result="srcColor"
+    values="
+      1 0 0 0 0
+      0 1 0 0 0
+      0 0 1 0 0
+      0 0 0 1 0" />
+  <feComposite in="srcColor" in2="smokeAlpha" operator="in" result="coloredSmoke"/>
   <feMerge>
     <feMergeNode in="coloredSmoke"/>
     <feMergeNode in="SourceGraphic"/>
