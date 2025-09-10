@@ -16,33 +16,14 @@ const COLORS = {
 };
 
 const EVENTS = [
-  { id: "e1", title: "Childhood in Queens", date: "1987 & 1992", desc: "Unreasonable number of popsicles.", icon: <MapPin className="w-4 h-4" />, img: "/Children.png", side: "left", path: "you", position: 0.08 },
-  { id: "e2", title: "Graduate school missed connection", date: "2016–2018", desc: "Coffee, code, and late trains. We were two years apart and never knew.", icon: <Camera className="w-4 h-4" />, img: "/Graduation.png", side: "right", path: "partner", position: 0.18 },
-  { id: "e3", title: "Missed connection #1", date: "2019", desc: "Same concert, same rainstorm, different umbrellas.", icon: <MapPin className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200", side: "left", path: "you", position: 0.28 },
-  { id: "e4", title: "First DM", date: "2021", desc: "A meme about sourdough. Predictable, in retrospect.", icon: <Camera className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=1200", side: "right", path: "partner", position: 0.45 },
-  { id: "e5", title: "First date (we finally meet)", date: "2022-06-18", desc: "Two trains. One table by the window. Everything clicked.", icon: <Heart className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200", side: "merge", path: "merge", position: 0.62 },
-  { id: "e6", title: "The proposal", date: "2025-01-14", desc: "A snowy overlook, numb fingers, warm yes.", icon: <Heart className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200", side: "merge", path: "merge", position: 0.82 },
-];
-
-const CALLOUTS = [
-  {
-    id: "c1",
-    position: 0.12,            // when it should appear (0..1 of the timeline section)
-    offset: "6%",              // horizontal placement (CSS margin-left); e.g. "6%", "22%", "60%"
-    text: "We grew up a few subway stops apart but never met.",
-  },
-  {
-    id: "c2",
-    position: 0.32,
-    offset: "42%",
-    text: "Same concert in 2019—missed each other by minutes.",
-  },
-  {
-    id: "c3",
-    position: 0.63,
-    offset: "22%",
-    text: "First date: ramen + a thunderstorm. Instant ease.",
-  },
+  { id: "e1", title: "Childhood in Queens", date: "1987 & 1992", desc: "We played in the same playgrounds in Elmhurst.", icon: <MapPin className="w-4 h-4" />, img: "/Children.png", side: "left", path: "you", position: 0.08 },
+  { id: "e2", title: "Graduate school missed connection", date: "2017–2022", desc: "We were five years apart at Columbia but never knew -- both studying architecture briefly, before pivoting.", icon: <Camera className="w-4 h-4" />, img: "/Graduation.png", side: "right", path: "partner", position: 0.18 },
+  { id: "e3", title: "Missed connection #1", date: "2016", desc: "We missed each other in the Galapagos Isles by a few months.", icon: <MapPin className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200", side: "left", path: "you", position: 0.28 },
+  { id: "e4", title: "Missed connection #2", date: "2019", desc: "Constantine worked with FUNGLODE in the DR - Dominicanas on his mind.", icon: <MapPin className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200", side: "left", path: "you", position: 0.28 },
+  { id: "e5", title: "Missed connection #3", date: "2019", desc: "We missed each other in the Galapagos Isles by a few months.", icon: <MapPin className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200", side: "left", path: "you", position: 0.28 },
+  { id: "e6", title: "First DM", date: "2021", desc: "We were tutors and teaching in the Bronx but still didn't meet.", icon: <Camera className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=1200", side: "right", path: "partner", position: 0.45 },
+  { id: "e7", title: "First date (we finally meet)", date: "2022-06-18", desc: "The day we met, Constantine’s fridge and phone died – spooky omen / cosmic reset?.", icon: <Heart className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200", side: "merge", path: "merge", position: 0.62 },
+  { id: "e8", title: "The proposal: Central Park rowboats by the Loeb Boathouse, with friends in on the surprise.", date: "2025-07-19", desc: "", icon: <Heart className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200", side: "merge", path: "merge", position: 0.82 },
 ];
 
 const X_CENTER_PCT = 0.28;
