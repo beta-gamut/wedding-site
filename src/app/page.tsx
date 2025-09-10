@@ -24,6 +24,27 @@ const EVENTS = [
   { id: "e6", title: "The proposal", date: "2025-01-14", desc: "A snowy overlook, numb fingers, warm yes.", icon: <Heart className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200", side: "merge", path: "merge", position: 0.82 },
 ];
 
+const CALLOUTS = [
+  {
+    id: "c1",
+    position: 0.12,            // when it should appear (0..1 of the timeline section)
+    offset: "6%",              // horizontal placement (CSS margin-left); e.g. "6%", "22%", "60%"
+    text: "We grew up a few subway stops apart but never met.",
+  },
+  {
+    id: "c2",
+    position: 0.32,
+    offset: "42%",
+    text: "Same concert in 2019—missed each other by minutes.",
+  },
+  {
+    id: "c3",
+    position: 0.63,
+    offset: "22%",
+    text: "First date: ramen + a thunderstorm. Instant ease.",
+  },
+];
+
 const X_CENTER_PCT = 0.28;
 
 // -----------------------------------------
