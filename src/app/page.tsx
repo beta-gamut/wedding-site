@@ -227,6 +227,23 @@ export default function WeddingTimeline() {
                     <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" result="noise" />
                     <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" />
                   </filter>
+
+                   {/* NEW smoky filter */}
+                  <filter id="smokyStroke" x="-50%" y="-50%" width="200%" height="200%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="2" result="noise">
+                      <animate attributeName="baseFrequency" values="0.012;0.018;0.012" dur="14s" repeatCount="indefinite"/>
+                    </feTurbulence>
+                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                    <feGaussianBlur in="displaced" stdDeviation="5" result="haze"/>
+                    <feComponentTransfer in="haze" result="hazeFaint">
+                      <feFuncA type="gamma" exponent="1.6" amplitude="0.5" offset="0"/>
+                    </feComponentTransfer>
+                    <feMerge>
+                      <feMergeNode in="hazeFaint"/>
+                      <feMergeNode in="displaced"/>
+                    </feMerge>
+                  </filter>
+
                   {/* Existing glow filter */}
                   <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
                     <feGaussianBlur stdDeviation="3" result="blur" />
@@ -243,15 +260,14 @@ export default function WeddingTimeline() {
                 ))}
 
                 {/* Partner path */}
-               <motion.path
-                d={partnerPath}
-                fill="none"
-                stroke={COLORS.partner}
-                strokeWidth={14}
-                filter="url(#fabricTexture)"  // << NEW
-               // filter="url(#glow)"      // keep glow if you want
-                style={{ pathLength: pathProgress }}
-              />
+                <motion.path
+                  d={partnerPath}
+                  fill="none"
+                  stroke={COLORS.partner}
+                  strokeWidth={14}
+                  filter="url(#smokyStroke)"
+                  style={{ pathLength: pathProgress }}
+                />
 
                 {/* Your path */}
                 <motion.path
