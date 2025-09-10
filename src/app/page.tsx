@@ -17,7 +17,7 @@ const COLORS = {
 
 const EVENTS = [
   { id: "e1", title: "Childhood in Queens", date: "1987 & 1992", desc: "Unreasonable number of popsicles.", icon: <MapPin className="w-4 h-4" />, img: "/Children.png", side: "left", path: "you", position: 0.08 },
-  { id: "e2", title: "Graduate school missed connection", date: "2016–2018", desc: "Coffee, code, and late trains. We were two stops apart and never knew.", icon: <Camera className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=1200", side: "right", path: "partner", position: 0.18 },
+  { id: "e2", title: "Graduate school missed connection", date: "2016–2018", desc: "Coffee, code, and late trains. We were two years apart and never knew.", icon: <Camera className="w-4 h-4" />, img: "/Graduation.png", side: "right", path: "partner", position: 0.18 },
   { id: "e3", title: "Missed connection #1", date: "2019", desc: "Same concert, same rainstorm, different umbrellas.", icon: <MapPin className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200", side: "left", path: "you", position: 0.28 },
   { id: "e4", title: "First DM", date: "2021", desc: "A meme about sourdough. Predictable, in retrospect.", icon: <Camera className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=1200", side: "right", path: "partner", position: 0.45 },
   { id: "e5", title: "First date (we finally meet)", date: "2022-06-18", desc: "Two trains. One table by the window. Everything clicked.", icon: <Heart className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200", side: "merge", path: "merge", position: 0.62 },
