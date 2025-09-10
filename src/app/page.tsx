@@ -424,12 +424,12 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
     RSVP
   </a>
   <a
-    href="https://melissa-x-constantine.vercel.app"
+    href="https://roundhousebeacon.com/private-dining-and-events/"
     target="_blank"
     rel="noopener noreferrer"
     className="px-5 py-3 rounded-2xl bg-white text-black font-medium shadow border"
   >
-    Travel
+    Venue
   </a>
 </div>
         </div>
