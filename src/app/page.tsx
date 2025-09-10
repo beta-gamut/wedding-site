@@ -29,7 +29,7 @@ const EVENTS = [
   { id: "e11", title: "Constantine kept proposing....", date: "2025-07-19", desc: "He never gave up", icon: <Heart className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200", side: "merge", path: "merge", position: 0.82 },
   { id: "e12", title: "Constantine kept proposing....", date: "2025-07-19", desc: "He never gave up", icon: <Heart className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200", side: "merge", path: "merge", position: 0.82 },
   { id: "e13", title: "Constantine kept proposing....", date: "2025-07-19", desc: "He never gave up", icon: <Heart className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200", side: "merge", path: "merge", position: 0.82 },
-  { id: "e14", title: "Constantine kept proposing....", date: "2025-07-19", desc: "He never gave up", icon: <Heart className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200", side: "merge", path: "merge", position: 0.82 },
+  { id: "e14", title: "Constantine & Melissa", date: "2025-07-19", desc: "You're Welcome.", icon: <Heart className="w-4 h-4" />, img: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200", side: "merge", path: "merge", position: 0.82 },
   
 ];
 
