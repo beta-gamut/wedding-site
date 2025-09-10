@@ -414,10 +414,24 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
           <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
             March 29, 2026 · Beacon, NY · Ceremony at the Roundhouse, reception to follow.
           </p>
-          <div className="mt-8 flex justify-center gap-4">
-            <a href="#rsvp" className="px-5 py-3 rounded-2xl bg-black text-white font-medium shadow-lg">RSVP</a>
-            <a href="#travel" className="px-5 py-3 rounded-2xl bg-white text-black font-medium shadow border">Travel</a>
-          </div>
+<div className="mt-8 flex justify-center gap-4">
+  <a
+    href="https://melissa-x-constantine.vercel.app"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="px-5 py-3 rounded-2xl bg-black text-white font-medium shadow-lg"
+  >
+    RSVP
+  </a>
+  <a
+    href="https://melissa-x-constantine.vercel.app"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="px-5 py-3 rounded-2xl bg-white text-black font-medium shadow border"
+  >
+    Travel
+  </a>
+</div>
         </div>
       </section>
     </div>
