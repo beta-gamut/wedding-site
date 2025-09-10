@@ -214,6 +214,20 @@ export default function WeddingTimeline() {
             {mounted && (
               <svg width={SVG_WIDTH} height={SVG_HEIGHT} viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`} className="h-full">
                 <defs>
+                  {/* NEW cloth pattern */}
+                  <pattern id="cloth" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                    <rect width="4" height="8" fill="white" />
+                  </pattern>
+                  <mask id="clothMask">
+                    <rect width="100%" height="100%" fill="url(#cloth)" />
+                  </mask>
+
+                  {/* NEW fabric filter */}
+                  <filter id="fabricTexture" x="0%" y="0%" width="100%" height="100%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" result="noise" />
+                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" />
+                  </filter>
+                  {/* Existing glow filter */}
                   <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
                     <feGaussianBlur stdDeviation="3" result="blur" />
                     <feMerge>
@@ -229,29 +243,25 @@ export default function WeddingTimeline() {
                 ))}
 
                 {/* Partner path */}
-                <motion.path
-                  d={partnerPath}
-                  fill="none"
-                  stroke={COLORS.partner}
-                  strokeWidth={8}
-                  strokeLinecap="round"
-                  vectorEffect="non-scaling-stroke"
-                  filter="url(#glow)"
-                  style={{ pathLength: pathProgress }}
-                />
+               <motion.path
+  d={partnerPath}
+  fill="none"
+  stroke={COLORS.partner}
+  strokeWidth={10}
+  mask="url(#clothMask)"   // << NEW
+  filter="url(#glow)"      // keep glow if you want
+  style={{ pathLength: pathProgress }}
+/>
 
                 {/* Your path */}
-                <motion.path
-                  ref={youPathRef}
-                  d={youPath}
-                  fill="none"
-                  stroke={COLORS.you}
-                  strokeWidth={8}
-                  strokeLinecap="round"
-                  vectorEffect="non-scaling-stroke"
-                  filter="url(#glow)"
-                  style={{ pathLength: pathProgress }}
-                />
+             <motion.path
+  d={youPath}
+  fill="none"
+  stroke={COLORS.you}
+  strokeWidth={10}
+  filter="url(#fabricTexture)"  // << NEW
+  style={{ pathLength: pathProgress }}
+/>
 
                 {/* Merge path (post-meet) */}
                 {mergeD && (
