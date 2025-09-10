@@ -229,31 +229,20 @@ export default function WeddingTimeline() {
                   </filter>
 
                    {/* NEW smoky filter */}
-<filter id="smokyStroke"
-        x="-30%" y="-30%" width="160%" height="160%"
-        filterUnits="objectBoundingBox"
-        color-interpolation-filters="sRGB">
-  <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="4" seed="7" result="noise">
-    <animate attributeName="baseFrequency" values="0.016;0.028;0.02" dur="12s" repeatCount="indefinite"/>
-  </feTurbulence>
-
-  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="alphaWide"/>
-  <feDisplacementMap in="alphaWide" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G" result="wispyAlpha"/>
-
-  <feGaussianBlur in="wispyAlpha" stdDeviation="12" result="smokeAlpha"/>
-
-  <feFlood flood-color="#cd28ff" flood-opacity="1" result="smokeColor"/>
-  <feComposite in="smokeColor" in2="smokeAlpha" operator="in" result="coloredSmoke"/>
-
-  <feComponentTransfer in="coloredSmoke" result="coloredSmoke">
-    <feFuncA type="gamma" exponent="1.4" amplitude="0.9" offset="0"/>
-  </feComponentTransfer>
-
-  <feMerge>
-    <feMergeNode in="coloredSmoke"/>
-    <feMergeNode in="SourceGraphic"/>
-  </feMerge>
-</filter>
+                  <filter id="smokyStroke" x="-30%" y="-30%" width="160%" height="160%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" seed="7" result="noise">
+                      <animate attributeName="baseFrequency" values="0.015;0.03;0.02" dur="10s" repeatCount="indefinite"/>
+                    </feTurbulence>
+                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                    <feGaussianBlur in="displaced" stdDeviation="15" result="haze"/>
+                    <feComponentTransfer in="haze" result="denseHaze">
+                      <feFuncA type="linear" slope="0.8" intercept="0.15"/> 
+                    </feComponentTransfer>
+                    <feMerge>
+                      <feMergeNode in="denseHaze"/>
+                      <feMergeNode in="displaced"/>
+                    </feMerge>
+                  </filter>
 
                   {/* Existing glow filter */}
                   <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
