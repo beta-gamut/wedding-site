@@ -249,7 +249,7 @@ export default function WeddingTimeline() {
                 stroke={COLORS.partner}
                 strokeWidth={14}
                 filter="url(#fabricTexture)"  // << NEW
-                filter="url(#glow)"      // keep glow if you want
+               // filter="url(#glow)"      // keep glow if you want
                 style={{ pathLength: pathProgress }}
               />
 
@@ -260,7 +260,7 @@ export default function WeddingTimeline() {
                   stroke={COLORS.you}
                   strokeWidth={14}
                   filter="url(#fabricTexture)"  // << NEW
-                  filter="url(#glow)"      // keep glow if you want
+                  //filter="url(#glow)"      // keep glow if you want
                   style={{ pathLength: pathProgress }}
                 />
 
