@@ -29,15 +29,32 @@ const X_CENTER_PCT = 0.28;
 // -----------------------------------------
 // 2) SVG PATHS
 // -----------------------------------------
-function buildWavyPath(width: number, height: number, phase = 0, amplitude = 240, frequency = 2) {
+type TaperFn = (t: number) => number; // t in [0..1]
+// Downward taper: full at top -> 0 at bottom
+const taperDown: TaperFn = (t) => 1 - t;                     // linear
+// or a stronger “hold then drop”:
+const taperDownCubic: TaperFn = (t) => 1 - Math.pow(t, 3);
+// Upward taper: 0 at start -> full at bottom
+const taperUp: TaperFn = (t) => t;                           // linear
+// or smoother “ease in”:
+const taperUpCubic: TaperFn = (t) => Math.pow(t, 3);
+
+function buildWavyPath(
+  width: number,
+  height: number,
+  phase = 0,
+  amplitude = 240,
+  frequency = 2,
+  taperFn: TaperFn = taperDown   // default: taper to zero at end
+) {
   const steps = 40;
   const pts: [number, number][] = [];
   for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
+    const t = i / steps;                     // 0..1 along the path
     const y = t * height;
     const xCenter = width * X_CENTER_PCT;
-    const taper = 1 - t;
-    const wave = Math.sin(t * Math.PI * frequency + phase) * amplitude * Math.max(0, taper);
+    const taper = Math.max(0, taperFn(t));   // << use chosen taper
+    const wave = Math.sin(t * Math.PI * frequency + phase) * amplitude * taper;
     const x = xCenter + wave;
     pts.push([x, y]);
   }
@@ -54,16 +71,18 @@ function buildYouPath(width: number, height: number) {
 }
 
 // Smooth, undulating merge using Catmull–Rom -> cubic Bézier
+// Merge: same idea
 function buildMergeWavyFromStart(
   width: number,
   svgHeight: number,
   startY: number,
-  startX: number,          // NEW: exact merge-start X (p.x)
+  startX: number,
   amplitude = 70,
   frequency = 2.2,
-  phase = 0,               // phase offset in radians
-  steps = 100,             // sampling density
-  tension = 0.5            // Catmull–Rom tension (0..1)
+  phase = 0,
+  steps = 100,
+  tension = 0.5,
+  taperFn: TaperFn = taperUp      // default: grow from 0 to 1
 ) {
   const xCenter = width * X_CENTER_PCT;
   const yEnd = svgHeight - 20;
@@ -71,11 +90,11 @@ function buildMergeWavyFromStart(
 
   const pts: [number, number][] = [];
   for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
+    const t = i / steps;                          // 0 at merge start -> 1 at bottom
     const y = startY + t * ySpan;
-    const taper = 1 - t;
+    const taper = Math.max(0, taperFn(t));        // << flipped taper
     const wave = Math.sin(t * Math.PI * frequency + phase) * amplitude * taper;
-    const x = i === 0 ? startX : xCenter + wave; // NEW: first point matches the join X exactly
+    const x = i === 0 ? startX : xCenter + wave;  // keep exact join X
     pts.push([x, y]);
   }
 
@@ -162,8 +181,10 @@ export default function WeddingTimeline() {
   const SVG_HEIGHT = MEET_Y + MERGE_LENGTH;
   const PATH_HEIGHT = MEET_Y;
 
-  const youPath = buildYouPath(SVG_WIDTH, PATH_HEIGHT);
-  const partnerPath = buildPartnerPath(SVG_WIDTH, PATH_HEIGHT);
+  // Pre-merge: taper down to 0
+const youPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, 0, 125, 2.5, taperDownCubic);
+const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2, taperDownCubic);
+
 
   // Merge path built from geometry
   const [mergeD, setMergeD] = useState<string>("");
@@ -175,17 +196,19 @@ export default function WeddingTimeline() {
     const el = youPathRef.current;
     const len = el.getTotalLength();
     const p = el.getPointAtLength(len); // merge start
-
+    // Merge: start at 0, grow to full by the bottom
+    // (you already build this in useEffect; just pass taperUpCubic)
     const d = buildMergeWavyFromStart(
       SVG_WIDTH,
       SVG_HEIGHT,
       p.y,
-      p.x,       // startX aligns X perfectly
-      70,        // amplitude
-      5,         // frequency
-      Math.PI,   // phase
-      120,       // steps
-      0.5        // tension
+      p.x,
+      70,          // amplitude
+      5,           // frequency
+      Math.PI,     // phase
+      120,         // steps
+      0.5,         // tension
+      taperUpCubic // << grow-from-zero taper
     );
 
     setMergeD(d);
