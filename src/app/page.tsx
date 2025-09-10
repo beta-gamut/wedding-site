@@ -229,20 +229,22 @@ export default function WeddingTimeline() {
                   </filter>
 
                    {/* NEW smoky filter */}
-                  <filter id="smokyStroke" x="-0%" y="-0%" width="0%" height="0%">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" seed="7" result="noise">
-                      <animate attributeName="baseFrequency" values="0.015;0.03;0.02" dur="10s" repeatCount="indefinite"/>
-                    </feTurbulence>
-                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
-                    <feGaussianBlur in="displaced" stdDeviation="15" result="haze"/>
-                    <feComponentTransfer in="haze" result="denseHaze">
-                      <feFuncA type="linear" slope="0.8" intercept="0.15"/> 
-                    </feComponentTransfer>
-                    <feMerge>
-                      <feMergeNode in="denseHaze"/>
-                      <feMergeNode in="displaced"/>
-                    </feMerge>
-                  </filter>
+<filter id="smokyStrokeColorized"
+        x="-30%" y="-30%" width="160%" height="160%"
+        filterUnits="objectBoundingBox"
+        color-interpolation-filters="sRGB">
+  <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" seed="7" result="noise">
+    <animate attributeName="baseFrequency" values="0.015;0.03;0.02" dur="10s" repeatCount="indefinite"/>
+  </feTurbulence>
+  <feDisplacementMap in="SourceAlpha" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" result="displacedAlpha"/>
+  <feGaussianBlur in="displacedAlpha" stdDeviation="15" result="smokeAlpha"/>
+  <feFlood flood-color="currentColor" flood-opacity="1" result="tint"/>
+  <feComposite in="tint" in2="smokeAlpha" operator="in" result="coloredSmoke"/>
+  <feMerge>
+    <feMergeNode in="coloredSmoke"/>
+    <feMergeNode in="SourceGraphic"/>
+  </feMerge>
+</filter>
 
                   {/* Existing glow filter */}
                   <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
@@ -260,39 +262,37 @@ export default function WeddingTimeline() {
                 ))}
 
                 {/* Partner path */}
-                <motion.path
-                  d={partnerPath}
-                  fill="none"
-                  stroke={COLORS.partner}
-                  strokeWidth={14}
-                  filter="url(#smokyStroke)"
-                  style={{ pathLength: pathProgress }}
-                />
+              <motion.path
+  d={partnerPath}
+  fill="none"
+  stroke="currentColor"
+  strokeWidth={14}
+  filter="url(#smokyStrokeColorized)"
+  style={{ color: COLORS.partner, pathLength: pathProgress }}
+/>
 
                 {/* Your path */}
-                <motion.path
-                  d={youPath}
-                  fill="none"
-                  stroke={COLORS.you}
-                  strokeWidth={14}
-                  filter="url(#fabricTexture)"  // << NEW
-                  //filter="url(#glow)"      // keep glow if you want
-                  style={{ pathLength: pathProgress }}
-                />
+             <motion.path
+  ref={youPathRef}
+  d={youPath}
+  fill="none"
+  stroke="currentColor"
+  strokeWidth={14}
+  filter="url(#smokyStrokeColorized)"
+  style={{ color: COLORS.you, pathLength: pathProgress }}
+/>
 
                 {/* Merge path (post-meet) */}
                 {mergeD && (
-                  <motion.path
-                    d={mergeD}
-                    fill="none"
-                    stroke={COLORS.merge}
-                    strokeWidth={8}
-                    strokeLinecap="round"
-                    vectorEffect="non-scaling-stroke"
-                    filter="url(#glow)"
-                    style={{ pathLength: mergePathProgress, opacity: mergeOpacity }}
-                  />
-                )}
+                 <motion.path
+    d={mergeD}
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={14}
+    filter="url(#smokyStrokeColorized)"
+    style={{ color: COLORS.merge, pathLength: mergePathProgress, opacity: mergeOpacity }}
+  />
+)}
 
                 {/* Meet point (at merge start) */}
                 {mergeStart && (
@@ -361,7 +361,7 @@ export default function WeddingTimeline() {
         <div className="max-w-4xl mx-auto px-6 py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Save the Date</h2>
           <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
-            June 14, 2026 · Asbury Park, NJ · Ceremony on the boardwalk, reception to follow.
+            March 29, 2026 · Beacon, NY · Ceremony at the Roundhouse, reception to follow.
           </p>
           <div className="mt-8 flex justify-center gap-4">
             <a href="#rsvp" className="px-5 py-3 rounded-2xl bg-black text-white font-medium shadow-lg">RSVP</a>
