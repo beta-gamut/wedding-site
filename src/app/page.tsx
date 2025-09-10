@@ -236,8 +236,8 @@ export default function WeddingTimeline() {
   <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" seed="7" result="noise">
     <animate attributeName="baseFrequency" values="0.015;0.03;0.02" dur="10s" repeatCount="indefinite"/>
   </feTurbulence>
-  <feDisplacementMap in="SourceAlpha" in2="noise" scale="24" xChannelSelector="R" yChannelSelector="G" result="displacedAlpha"/>
-  <feGaussianBlur in="displacedAlpha" stdDeviation="22" result="smokeAlpha"/>
+  <feDisplacementMap in="SourceAlpha" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" result="displacedAlpha"/>
+  <feGaussianBlur in="displacedAlpha" stdDeviation="15" result="smokeAlpha"/>
   <feFlood flood-color="currentColor" flood-opacity="1" result="tint"/>
   <feComposite in="tint" in2="smokeAlpha" operator="in" result="coloredSmoke"/>
   <feMerge>
@@ -266,7 +266,7 @@ export default function WeddingTimeline() {
   d={partnerPath}
   fill="none"
   stroke="currentColor"
-  strokeWidth={14}
+  strokeWidth={20}
   filter="url(#smokyStrokeColorized)"
   style={{ color: COLORS.partner, pathLength: pathProgress }}
 />
@@ -277,7 +277,7 @@ export default function WeddingTimeline() {
   d={youPath}
   fill="none"
   stroke="currentColor"
-  strokeWidth={14}
+  strokeWidth={20}
   filter="url(#smokyStrokeColorized)"
   style={{ color: COLORS.you, pathLength: pathProgress }}
 />
@@ -288,7 +288,7 @@ export default function WeddingTimeline() {
     d={mergeD}
     fill="none"
     stroke="currentColor"
-    strokeWidth={14}
+    strokeWidth={20}
     filter="url(#smokyStrokeColorized)"
     style={{ color: COLORS.merge, pathLength: mergePathProgress, opacity: mergeOpacity }}
   />
