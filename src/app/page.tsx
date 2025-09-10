@@ -39,6 +39,12 @@ const taperUp: TaperFn = (t) => t;                           // linear
 // or smoother “ease in”:
 const taperUpCubic: TaperFn = (t) => Math.pow(t, 3);
 
+type RampFn = (t: number) => number; // t in [0..1]
+// Linear ramp (steady growth)
+const rampLinear: RampFn = (t) => t;
+// Cubic ramp (slow at first, then explodes near the end)
+const rampCubic: RampFn = (t) => t * t * t;
+
 function buildWavyPath(
   width: number,
   height: number,
@@ -70,37 +76,49 @@ function buildYouPath(width: number, height: number) {
   return buildWavyPath(width, height * 0.8, 0, 125, 2.5);
 }
 
-// Smooth, undulating merge using Catmull–Rom -> cubic Bézier
-// Merge: same idea
+/**
+ * Merge path with Catmull–Rom smoothing.
+ * Now supports: taper(t), amplitude ramp, frequency ramp.
+ */
 function buildMergeWavyFromStart(
   width: number,
   svgHeight: number,
   startY: number,
   startX: number,
-  amplitude = 70,
-  frequency = 2.2,
+  amplitudeBase = 70,
+  frequencyBase = 2.2,
   phase = 0,
   steps = 100,
   tension = 0.5,
-  taperFn: TaperFn = taperUp      // default: grow from 0 to 1
+  taperFn: TaperFn = (t) => t,         // grow from 0 -> 1 by default
+  ampRamp: RampFn = rampCubic,         // how amplitude grows 0 -> 1
+  freqRamp: RampFn = rampLinear        // how frequency grows 0 -> 1
 ) {
   const xCenter = width * X_CENTER_PCT;
   const yEnd = svgHeight - 20;
   const ySpan = Math.max(1, yEnd - startY);
 
+  // oversample for smoother high-freq curve
+  const N = Math.max(steps, 120);
+
   const pts: [number, number][] = [];
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;                          // 0 at merge start -> 1 at bottom
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;                               // 0 at merge start → 1 at bottom
     const y = startY + t * ySpan;
-    const taper = Math.max(0, taperFn(t));        // << flipped taper
-    const wave = Math.sin(t * Math.PI * frequency + phase) * amplitude * taper;
-    const x = i === 0 ? startX : xCenter + wave;  // keep exact join X
+
+    const taper = Math.max(0, taperFn(t));        // 0..1
+    const amp = amplitudeBase * (1 + 1.2 * ampRamp(t));     // grow up to ~2.2× base
+    const freq = frequencyBase * (1 + 1.6 * freqRamp(t));   // grow up to ~2.6× base
+
+    const wave = Math.sin(t * Math.PI * freq + phase) * amp * taper;
+    const x = i === 0 ? startX : xCenter + wave;  // exact join at i=0
     pts.push([x, y]);
   }
 
   if (pts.length < 2) return "";
   const P = (k: number) => pts[Math.max(0, Math.min(pts.length - 1, k))];
 
+  // Catmull–Rom → cubic Bézier
   let d = `M ${pts[0][0]} ${pts[0][1]}`;
   for (let i = 0; i < pts.length - 1; i++) {
     const p0 = P(i - 1), p1 = P(i), p2 = P(i + 1), p3 = P(i + 2);
@@ -191,29 +209,30 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
   const [mergeStart, setMergeStart] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
-    if (!mounted || !youPathRef.current) return;
+  if (!mounted || !youPathRef.current) return;
 
-    const el = youPathRef.current;
-    const len = el.getTotalLength();
-    const p = el.getPointAtLength(len); // merge start
-    // Merge: start at 0, grow to full by the bottom
-    // (you already build this in useEffect; just pass taperUpCubic)
-    const d = buildMergeWavyFromStart(
-      SVG_WIDTH,
-      SVG_HEIGHT,
-      p.y,
-      p.x,
-      70,          // amplitude
-      5,           // frequency
-      Math.PI,     // phase
-      120,         // steps
-      0.5,         // tension
-      taperUpCubic // << grow-from-zero taper
-    );
+  const el = youPathRef.current;
+  const len = el.getTotalLength();
+  const p = el.getPointAtLength(len); // merge start (x,y)
 
-    setMergeD(d);
-    setMergeStart({ x: p.x, y: p.y });
-  }, [mounted, SVG_WIDTH, SVG_HEIGHT]);
+  const d = buildMergeWavyFromStart(
+    SVG_WIDTH,
+    SVG_HEIGHT,
+    p.y,
+    p.x,
+    /* amplitudeBase */ 110,      // ↑ bigger base
+    /* frequencyBase */ 4.5,      // ↑ faster base oscillation
+    /* phase */ Math.PI,          // keep your existing phase
+    /* steps */ 180,              // ↑ oversample for smoothness
+    /* tension */ 0.55,           // a hair snappier
+    /* taperFn */ taperUpCubic,   // grow from 0 → 1 (pinch effect)
+    /* ampRamp */ rampCubic,      // amplitude explodes near bottom
+    /* freqRamp */ rampLinear     // frequency ramps steadily
+  );
+
+  setMergeD(d);
+  setMergeStart({ x: p.x, y: p.y });
+}, [mounted, SVG_WIDTH, SVG_HEIGHT]);
 
   return (
     <div className="min-h-screen w-full bg-white">
