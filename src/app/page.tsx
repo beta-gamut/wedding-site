@@ -229,7 +229,7 @@ export default function WeddingTimeline() {
                   </filter>
 
                    {/* NEW smoky filter */}
-                  <filter id="smokyStroke" x="-30%" y="-30%" width="160%" height="160%">
+                  <filter id="smokyStroke" x="-0%" y="-0%" width="0%" height="0%">
                     <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" seed="7" result="noise">
                       <animate attributeName="baseFrequency" values="0.015;0.03;0.02" dur="10s" repeatCount="indefinite"/>
                     </feTurbulence>
