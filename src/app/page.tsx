@@ -421,7 +421,7 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
     rel="noopener noreferrer"
     className="px-5 py-3 rounded-2xl bg-black text-white font-medium shadow-lg"
   >
-    RSVP
+    RSVP HERE
   </a>
   <a
     href="https://roundhousebeacon.com/private-dining-and-events/"
@@ -429,7 +429,7 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
     rel="noopener noreferrer"
     className="px-5 py-3 rounded-2xl bg-white text-black font-medium shadow border"
   >
-    Venue
+    VENUE INFO
   </a>
 </div>
         </div>
