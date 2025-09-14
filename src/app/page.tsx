@@ -5,6 +5,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, MapPin, Camera } from "lucide-react";
 
+
+
 // -----------------------------------------
 // 1) CONFIG
 // -----------------------------------------
@@ -18,8 +20,8 @@ const COLORS = {
 // CHANGED: All images now come from /public/images/...
 // Put these files in `public/images/` with these names (or change names here).
 const EVENTS = [
-  { id: "e1", title: "Childhood in Queens", date: "1987 (C) & 1992 (M)", desc: "We played in the same playgrounds in Elmhurst.", icon: <MapPin className="w-4 h-4" />, img: "/images/children.png", side: "left", path: "you", position: 0.08 }, // CHANGED
-  { id: "e2", title: "Graduate school missed connection", date: "2017 (C) & 2022 (M)", desc: "Both of us went to Columbia University – both studying architecture briefly, before pivoting (him to engineering, her to be a school psychologist). We graduated five years apart from one another", icon: <Camera className="w-4 h-4" />, img: "/images/graduation.png", side: "right", path: "partner", position: 0.18 }, // CHANGED
+  { id: "e1", title: "Childhood in Queens", date: "1987 (C) & 1992 (M)", desc: "We played in the same playgrounds in Elmhurst.", icon: <MapPin className="w-4 h-4" />, img: "/children.png", side: "left", path: "you", position: 0.08 }, // CHANGED
+  { id: "e2", title: "Graduate school missed connection", date: "2017 (C) & 2022 (M)", desc: "Both of us went to Columbia University – both studying architecture briefly, before pivoting (him to engineering, her to be a school psychologist). We graduated five years apart from one another", icon: <Camera className="w-4 h-4" />, img: "/graduation.png", side: "right", path: "partner", position: 0.18 }, // CHANGED
   { id: "e3", title: "Missed connection #3", date: "December 2016 (C) & March 2017 (M)", desc: "both visited the Galápagos Islands for school programs, months apart, each of us meeting the eponymous Lonesome George at the Darwin Center - we felt his loneliness.", icon: <MapPin className="w-4 h-4" />, img: "/images/galapagos.jpg", side: "left", path: "you", position: 0.28 }, // CHANGED
   { id: "e4", title: "Missed connection #4", date: "2019", desc: "Melissa is Dominican; Constantine studied in the Dominican Republic during grad school. Constantine worked with FUNGLODE in the DR - he had made his mind up about Dominicanas.", icon: <MapPin className="w-4 h-4" />, img: "/images/dominican-republic.jpg", side: "left", path: "you", position: 0.28 }, // CHANGED
   { id: "e5", title: "Missed connection #5", date: "2019", desc: "We missed each other in the Galapagos Isles by a few months.", icon: <MapPin className="w-4 h-4" />, img: "/images/galapagos-2.jpg", side: "left", path: "you", position: 0.28 }, // CHANGED
@@ -35,6 +37,9 @@ const EVENTS = [
 ];
 
 const X_CENTER_PCT = 0.28;
+
+// Helps when you deploy under a sub-path (Next.js basePath or reverse proxy)
+const withBase = (p: string) => `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${p}`;
 
 // -----------------------------------------
 // 2) SVG PATHS
