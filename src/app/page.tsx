@@ -342,43 +342,53 @@ export default function WeddingTimeline() {
                 <div style={{ height: `${Math.max(10, Math.round(e.position * 120))}vh` }} />
                 {isFirstDate && <div ref={firstDateRef} style={{ height: 0 }} aria-hidden />}
 
-                <Card className="shadow-lg border-0 rounded-2xl">
-                  <CardContent className="p-5 md:p-7">
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <span className="inline-flex items-center gap-1">
-                        {e.icon}
-                        {e.date}
-                      </span>
-                    </div>
-                    <h3 className="mt-1 text-xl md:text-2xl font-semibold tracking-tight">{e.title}</h3>
-                    <p className="mt-2 text-gray-600 leading-relaxed">{e.desc}</p>
+<Card className="shadow-lg border-0 rounded-2xl">
+  <CardContent className="p-5 md:p-7">
+    <div className="flex items-center gap-2 text-sm text-gray-500">
+      <span className="inline-flex items-center gap-1">
+        {e.icon}
+        {e.date}
+      </span>
+    </div>
+    <h3 className="mt-1 text-xl md:text-2xl font-semibold tracking-tight">
+      {e.title}
+    </h3>
+    <p className="mt-2 text-gray-600 leading-relaxed">{e.desc}</p>
 
-                    {/* CHANGED: Intrinsic sizing, no fixed height, no crop. */}
-                    <div className="mt-4 rounded-xl overflow-hidden">
-                      <img
-                        src={e.img}
-                        alt=""
-                        className="w-full h-auto" // CHANGED: keeps intrinsic ratio; no cropping
-                        loading="lazy"            // NEW: better perf on long timelines
-                        decoding="async"          // NEW: hint to decode off main thread
-                        // Optional (recommended if you know intrinsic size to reduce CLS):
-                        // width={1200}
-                        // height={800}
-                        onLoad={isFirstDate ? measureMergeStart : undefined}
-                      />
-                    </div>
+    {/* Intrinsic sizing: no fixed height, no crop */}
+    <div className="mt-4 overflow-hidden rounded-xl">
+      <img
+        src={e.img}
+        alt={e.title}
+        className="w-full h-auto"                // <-- no fixed height; preserves aspect ratio
+        loading="lazy"
+        decoding="async"
+        onLoad={isFirstDate ? measureMergeStart : undefined}
+        onError={(ev) => {
+          // optional: helps you spot bad paths/casing during dev
+          console.warn("Image failed to load:", (ev.currentTarget as HTMLImageElement).src);
+        }}
+      />
+    </div>
 
-                    <div className="mt-4 flex items-center gap-3">
-                      <span
-                        className="inline-block w-3 h-3 rounded-full"
-                        style={{ background: e.path === "you" ? COLORS.you : e.path === "partner" ? COLORS.partner : COLORS.merge }}
-                      />
-                      <span className="text-sm text-gray-500">
-                        {e.path === "you" ? "Constantine's Path" : e.path === "partner" ? "Melissa's Path" : "Together"}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
+    <div className="mt-4 flex items-center gap-3">
+      <span
+        className="inline-block w-3 h-3 rounded-full"
+        style={{
+          background:
+            e.path === "you" ? COLORS.you :
+            e.path === "partner" ? COLORS.partner :
+            COLORS.merge
+        }}
+      />
+      <span className="text-sm text-gray-500">
+        {e.path === "you" ? "Constantine's Path" :
+         e.path === "partner" ? "Melissa's Path" : "Together"}
+      </span>
+    </div>
+  </CardContent>
+</Card>
+
               </motion.div>
             );
           })}
