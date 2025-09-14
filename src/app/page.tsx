@@ -138,7 +138,7 @@ export default function WeddingTimeline() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const youPathRef = useRef<SVGPathElement | null>(null);
 
-  const firstDateRef = useRef<HTMLDivElement | null>(null);
+ // const firstDateRef = useRef<HTMLDivElement | null>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -151,9 +151,9 @@ export default function WeddingTimeline() {
   const firstDatePos =
     EVENTS.find((e) => e.title.toLowerCase().includes("first date"))?.position ?? 0.62;
 
-  const [mergeStartProgress, setMergeStartProgress] = useState(firstDatePos);
+  //const [mergeStartProgress, setMergeStartProgress] = useState(firstDatePos);
 
-  function measureMergeStart() {
+  /* function measureMergeStart() {
     const container = containerRef.current;
     const anchor = firstDateRef.current;
     if (!container || !anchor) return;
@@ -165,17 +165,18 @@ export default function WeddingTimeline() {
 
     const p = (anchorTop - containerTop) / scrollable;
     setMergeStartProgress(Math.max(0, Math.min(0.99, p)));
-  }
+  } */
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (!mounted) return;
     measureMergeStart();
     const onResize = () => measureMergeStart();
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  }, [mounted]);
+  }, [mounted]); */
 
-  const MERGE_START = mergeStartProgress;
+  //const MERGE_START = mergeStartProgress;
+  const MERGE_START = firstDatePos;
   const MERGE_END = 0.95;
 
   const pathProgress = useTransform(scrollYProgress, [0, MERGE_START], [0, 1]);
@@ -345,7 +346,7 @@ export default function WeddingTimeline() {
                 className={`relative w-full md:w-[58ch] ${e.side === "left" ? "md:ml-[5%]" : e.side === "right" ? "md:ml-[40%]" : "md:ml-[22%]"}`}
               >
                 <div style={{ height: `${Math.max(10, Math.round(e.position * 120))}vh` }} />
-                {isFirstDate && <div ref={firstDateRef} style={{ height: 0 }} aria-hidden />}
+                {/* isFirstDate && <div ref={firstDateRef} style={{ height: 0 }} aria-hidden /> */}
 
 <Card className="shadow-lg border-0 rounded-2xl">
   <CardContent className="p-5 md:p-7">
@@ -368,7 +369,7 @@ export default function WeddingTimeline() {
         className="w-full h-auto"                // <-- no fixed height; preserves aspect ratio
         loading="lazy"
         decoding="async"
-        onLoad={isFirstDate ? measureMergeStart : undefined}
+        //onLoad={isFirstDate ? measureMergeStart : undefined}
         onError={(ev) => {
           // optional: helps you spot bad paths/casing during dev
           console.warn("Image failed to load:", (ev.currentTarget as HTMLImageElement).src);
