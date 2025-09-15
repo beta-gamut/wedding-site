@@ -486,15 +486,15 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
          <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
            March 29, 2026 · Beacon, NY · Ceremony at the Roundhouse, reception to follow.
          </p>
-<div className="mt-8 flex justify-center gap-4">
- {/* <a
+ {/*<div className="mt-8 flex justify-center gap-4">
+  <a
    href="https://www.zola.com/wedding/melissaandconstantine"
    target="_blank"
    rel="noopener noreferrer"
    className="px-5 py-3 rounded-2xl bg-black text-white font-medium shadow-lg"
  >
    RSVP HERE
- </a>*/}
+ </a>
  <a
    href="https://roundhousebeacon.com/private-dining-and-events/"
    target="_blank"
@@ -503,7 +503,7 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
  >
    VENUE INFO
  </a>
-</div>
+</div>*/}
        </div>
      </section>
    </div>
