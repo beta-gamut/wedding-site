@@ -221,7 +221,7 @@ export default function WeddingTimeline() {
 
  // Pre-merge paths finish right when the merge begins
  const pathProgress = useTransform(scrollYProgress, [0, MERGE_START], [0, 1]);
- const cardOpacity = useTransform(scrollYProgress, [0, 0.1, 1], [0, 1, 1]);
+// const cardOpacity = useTransform(scrollYProgress, [0, 0.1, 1], [0, 1, 1]);
 
 
  const mergePathProgress = useTransform(scrollYProgress, [MERGE_START, MERGE_END], [0, 1]);
@@ -407,14 +407,23 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
 
        {/* Right column: story cards */}
        <div className="relative max-w-5xl mx-auto px-6">
-         {EVENTS.map((e) => {
-           const isFirstDate = e.title.toLowerCase().includes("first date"); // NEW
-           return (
-             <motion.div
-               key={e.id}
-               style={{ opacity: cardOpacity }}
-               className={`relative w-full md:w-[58ch] ${e.side === "left" ? "md:ml-[5%]" : e.side === "right" ? "md:ml-[40%]" : "md:ml-[22%]"}`}
-             >
+              {EVENTS.map((e) => {
+                const isFirstDate = e.title.toLowerCase().includes("first date");
+                return (
+                  <motion.div
+                    key={e.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.4 }}
+                    className={`relative w-full md:w-[58ch] ${
+                      e.side === "left"
+                        ? "md:ml-[5%]"
+                        : e.side === "right"
+                        ? "md:ml-[40%]"
+                        : "md:ml-[22%]"
+                    }`}
+                  >
                <div style={{ height: `${Math.max(10, Math.round(e.position * 120))}vh` }} />
                {/* NEW: zero-height anchor to measure this card's position */}
                {isFirstDate && <div ref={firstDateRef} style={{ height: 0 }} aria-hidden />}
