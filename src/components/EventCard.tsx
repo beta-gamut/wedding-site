@@ -32,7 +32,7 @@ export function EventCard({
       animate={controls}
       variants={variants}
       transition={{
-        duration: 0.5,              // 👈 longer fade (1s)
+        duration: 0.65,              // 👈 longer fade (1s)
         ease: "easeInOut",          // 👈 smoother easing
       }}
       className={className}
