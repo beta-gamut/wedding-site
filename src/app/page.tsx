@@ -457,13 +457,15 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
         style={{
           background:
             e.path === "you" ? COLORS.you :
-            e.path === "partner" ? COLORS.partner :
+            //e.path === "partner" ? COLORS.partner :
+            e.path === "partner" ? COLORS.you :
             COLORS.merge
         }}
       />
       <span className="text-sm text-gray-500">
-        {e.path === "you" ? "Constantine's Path" :
-         e.path === "partner" ? "Melissa's Path" : "Together"}
+        {e.path === "you" ? "Before we met" : //Constantine's Path" :
+         //e.path === "partner" ? "Melissa's Path" : "Together"}
+         e.path === "partner" ? "Before we met" : "Together"}
       </span>
     </div>
   </CardContent>
