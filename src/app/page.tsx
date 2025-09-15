@@ -394,8 +394,8 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
                {mergeStart && (
                  <motion.g style={{ opacity: meetOpacity }}>
                    <circle cx={mergeStart.x} cy={mergeStart.y} r={10} fill={COLORS.merge} />
-                   <text x={mergeStart.x + 16} y={mergeStart.y + 4} className="fill-gray-500 text-[12px]">
-                     First date
+                   <text x={mergeStart.x + 16} y={mergeStart.y + 4} className="fill-gray-700 text-[24px] font-semibold">
+                     First date - Mon, Oct 28, 2024, 8–9pm: Mareluna, Flatiron.
                    </text>
                  </motion.g>
                )}
