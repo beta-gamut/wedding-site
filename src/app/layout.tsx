@@ -19,29 +19,29 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://melissa-x-constantine.vercel.app"),
-  title: "Constantine & Melissa",
+  title: "Melissa & Constantine",
   description: "Save the date — March 29, 2026 · Beacon, NY",
   openGraph: {
-    title: "Constantine & Melissa",
+    title: "Melissa & Constantine",
     description: "Save the date — March 29, 2026 · Beacon, NY",
     url: "/",
-    siteName: "Constantine & Melissa",
+    siteName: "Melissa & Constantine",
     images: [
       {
-        // safer if you rename file to Constantine-and-Melissa.png
-        url: "/images/Constantine%26Melissa.png",
+        // safer if you rename file to Melissa-and-Constantine.png
+        url: "/images/Melissa%26Constantine.png",
         width: 1200,
         height: 630,
-        alt: "Constantine & Melissa",
+        alt: "Melissa & Constantine",
       },
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Constantine & Melissa",
+    title: "Melissa & Constantine",
     description: "Save the date — March 29, 2026 · Beacon, NY",
-    images: ["/images/Constantine%26Melissa.png"],
+    images: ["/images/Melissa%26Constantine.png"],
   },
 };
 

@@ -35,7 +35,7 @@ const EVENTS = [
  { id: "e10", title: "And We Took Our First of Many Trips Together", date: "Apr 13–20, 2025", desc: "So much seen on so little sleep", icon: <Heart className="w-4 h-4" />, img: "/images/FirstTrip.png", side: "right", path: "merge", position: 0.82 },
  { id: "e11", title: "Our Shared Future", date: "July 19, 2025", desc: "On July 2025, we got engaged in Central Park, surrounded by friends and family who became part of the surprise (photo credits to Brooke and Ryan!). Now, we look forward to celebrating with our loved ones at our wedding on March 29th, 2026 in Beacon, New York, and to continuing to build a life of shared adventures and laughter.", icon: <Camera className="w-4 h-4" />, img: "/images/Proposal.png", side: "merge", path: "merge", position: 0.82 },
 // { id: "e13", title: "Central Park rowboats", date: "July 19, 2025", desc: "Photo credits to Brooke and Ryan ;)", icon: <Heart className="w-4 h-4" />, img: "/images/Proposal.png", side: "merge", path: "merge", position: 0.82 },
- { id: "e12", title: "See You There!", date: "3/29/2026 - Beacon, NY", desc: "", icon: <Heart className="w-4 h-4" />, img: "/images/Constantine&Melissa.png", side: "merge", path: "merge", position: 0.82 },
+ { id: "e12", title: "See You There!", date: "3/29/2026 - Beacon, NY", desc: "", icon: <Heart className="w-4 h-4" />, img: "/images/Melissa&Constantine.png", side: "merge", path: "merge", position: 0.82 },
  ];
 
 
