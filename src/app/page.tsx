@@ -24,10 +24,10 @@ const EVENTS = [
  { id: "e2", title: "NYC High School", date: "Pre-2005 (C) & Pre-2010 (M)", desc: "", icon: <Camera className="w-4 h-4" />, img: "/images/516193714_10162281456903037_4098486317061675322_n.png", side: "right", path: "you", position: 0.18 },
  { id: "e3", title: "Art & Architecture", date: "Pre-2010 (C) & Pre-2014 (M)", desc: "", icon: <Camera className="w-4 h-4" />, img: "/images/Art&Arch.png", side: "left", path: "partner", position: 0.28 },
  { id: "e4", title: "Galapagos School Program", date: "Winter 2009 (C) & Summer 2009 (M)", desc: "", icon: <Camera className="w-4 h-4" />, img: "/images/IMG_6697.png", side: "right", path: "you", position: 0.38 },
- { id: "e5", title: "College Years", date: "2010 (C) & 2014 (M)", desc: "Pivoting from architecture — he to engineering, she to school psychology — Melissa graduates from UPenn, Constantine from CCNY in engineering, just like Melissa’s father did in 1987 (Constantine's birthday!)", icon: <Camera className="w-4 h-4" />, img: "/images/CCNY&UPenn.png", side: "left", path: "you", position: 0.48 },
+ { id: "e5", title: "College Years", date: "2010 (C) & 2014 (M)", desc: "Both pivoting from architecture — he to engineering, she to school psychology — Melissa graduates from UPenn, Constantine from CCNY in engineering, just like Melissa’s father did in 1987 (Constantine's birthday!)", icon: <Camera className="w-4 h-4" />, img: "/images/CCNY&UPenn.png", side: "left", path: "you", position: 0.48 },
 // { id: "e6", title: "Wepa!", date: "2019", desc: "Constantine studied in the DR during grad school, working with FUNGLODE - there he had made his mind up about Dominicanas.", icon: <MapPin className="w-4 h-4" />, img: "/images/DominicanRepublic.png", side: "right", path: "you", position: 0.58 },
  { id: "e6", title: "Graduate School", date: "2017 (C) & 2022 (M)", desc: "Both of us graduated from Columbia University five years apart from one another", icon: <Camera className="w-4 h-4" />, img: "/images/ColumbiaGrad.png", side: "left", path: "partner", position: 0.70 }, 
- { id: "e7", title: "Our Shared Story", date: "Oct 28, 2024: Mareluna, Flatiron.", desc: "Before meeting, we unknowingly traveled to the same places, studied in the same school, and taught in the same part of the city. When we did finally met in 2024, it was immediately apparent that our stories have always been running side by side.", icon: <Camera className="w-4 h-4" />, img: "/images/FirstDate.png", side: "merge", path: "merge", position: 0.82 },
+ { id: "e7", title: "Our Shared Story", date: "Oct 28, 2024: Mareluna, Flatiron.", desc: "When we finally met in 2024, it was immediately apparent that our stories have always been running side by side.", icon: <Camera className="w-4 h-4" />, img: "/images/FirstDate.png", side: "merge", path: "merge", position: 0.82 },
 // { id: "e9", title: "Our First Date", date: "Oct 28, 2024: Mareluna, Flatiron.", desc: "Constantine’s fridge and phone dies (spooky omen or cosmic reset?)", icon: <Heart className="w-4 h-4" />, img: "/images/FirstDate.png", side: "merge", path: "merge", position: 0.82 },
  { id: "e8", title: "We Then Had Wintery Adventures...", date: "Winter 2024", desc: "", icon: <Heart className="w-4 h-4" />, img: "/images/WinterAdventures.png", side: "right", path: "merge", position: 0.82 },
  { id: "e9", title: "...and Warmer Adventures", date: "Spring & Summer 2025", desc: "", icon: <Heart className="w-4 h-4" />, img: "/images/SummerAdventures.png", side: "left", path: "merge", position: 0.82 },
@@ -290,7 +290,7 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
            Our Paths to Together
          </motion.h1>
          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15 }} className="mt-4 text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-           Scroll Down to Trace Our Stories
+           Scroll to Trace Our Stories
          </motion.p>
        </div>
      </section>
