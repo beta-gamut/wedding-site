@@ -291,10 +291,10 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
      <section className="relative overflow-hidden">
        <div className="max-w-5xl mx-auto px-6 pt-24 pb-16 text-center">
          <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-4xl md:text-6xl font-semibold tracking-tight">
-           Our paths to forever
+           Our Paths to Forever
          </motion.h1>
          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15 }} className="mt-4 text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-           Scroll to watch our stories crisscross before we finally meet
+           Scroll to watch our stories crisscross and finally meet
          </motion.p>
        </div>
      </section>
