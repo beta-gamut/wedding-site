@@ -19,7 +19,7 @@ const COLORS = {
 
 
 const EVENTS = [
- { id: "e1", title: "Who We Are", date: "1987 (C) & 1992 (M)", desc: "We both grew up in Queens, spending time in the same neighborhoods without ever meeting. Our paths moved in parallel—through NYC public schools, art and architecture, and even graduate school just steps apart — until we finally crossed paths years later.", icon: <Camera className="w-4 h-4" />, img: "/images/children.png", side: "merge", path: "you", position: 0.00 },
+ { id: "e1", title: "Who We Are", date: "1987 (C) & 1992 (M)", desc: "We both grew up in Queens, spending time in the same neighborhoods without ever meeting. Our paths moved in parallel—through NYC public schools, art and architecture, and even graduate school just steps apart...", icon: <Camera className="w-4 h-4" />, img: "/images/children.png", side: "merge", path: "you", position: 0.00 },
  //{ id: "e2", title: "Childhood in Queens", date: "1987 (C) & 1992 (M)", desc: "", icon: <MapPin className="w-4 h-4" />, img: "/images/children.png", side: "left", path: "you", position: 0.08 },
  { id: "e2", title: "NYC High School", date: "Pre-2005 (C) & Pre-2010 (M)", desc: "", icon: <Camera className="w-4 h-4" />, img: "/images/516193714_10162281456903037_4098486317061675322_n.png", side: "right", path: "you", position: 0.18 },
  { id: "e3", title: "Art & Architecture", date: "Pre-2010 (C) & Pre-2014 (M)", desc: "", icon: <Camera className="w-4 h-4" />, img: "/images/Art&Arch.png", side: "left", path: "partner", position: 0.28 },
