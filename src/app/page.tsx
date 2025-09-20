@@ -17,6 +17,7 @@ const COLORS = {
  grid: "#E5E7EB",
 };
 
+const CARD_SPACER_SCALE_VH = 60; // was effectively 120
 
 const EVENTS = [
  { id: "e1", title: "Who We Are", date: "1987 (C) & 1992 (M)", desc: "We both grew up in Queens, spending time in the same neighborhoods without ever meeting. Our paths moved in parallel—through NYC public schools, art and architecture, and even graduate school just steps apart...", icon: <Camera className="w-4 h-4" />, img: "/images/children.png", side: "merge", path: "you", position: 0.00 },
@@ -29,7 +30,7 @@ const EVENTS = [
  { id: "e6", title: "Graduate School", date: "2017 (C) & 2022 (M)", desc: "Both of us graduated from Columbia University five years apart from one another", icon: <Camera className="w-4 h-4" />, img: "/images/ColumbiaGrad.png", side: "left", path: "partner", position: 0.70 }, 
  { id: "e7", title: "Our Shared Story", date: "Oct 28, 2024: Mareluna, Flatiron.", desc: "When we finally met in 2024, it was immediately apparent that our stories have always been running side by side.", icon: <Camera className="w-4 h-4" />, img: "/images/FirstDate.png", side: "merge", path: "merge", position: 0.82 },
 // { id: "e9", title: "Our First Date", date: "Oct 28, 2024: Mareluna, Flatiron.", desc: "Constantine’s fridge and phone dies (spooky omen or cosmic reset?)", icon: <Heart className="w-4 h-4" />, img: "/images/FirstDate.png", side: "merge", path: "merge", position: 0.82 },
- { id: "e8", title: "We Then Had Wintery Adventures...", date: "Winter 2024", desc: "", icon: <Heart className="w-4 h-4" />, img: "/images/WinterAdventures.png", side: "right", path: "merge", position: 0.82 },
+ { id: "e8", title: "We Had Winter Adventures...", date: "Winter 2024", desc: "", icon: <Heart className="w-4 h-4" />, img: "/images/WinterAdventures.png", side: "right", path: "merge", position: 0.82 },
  { id: "e9", title: "...and Warmer Adventures", date: "Spring & Summer 2025", desc: "", icon: <Heart className="w-4 h-4" />, img: "/images/SummerAdventures.png", side: "left", path: "merge", position: 0.82 },
  { id: "e10", title: "And We Took Our First of Many Trips Together", date: "Apr 13–20, 2025", desc: "So much seen on so little sleep", icon: <Heart className="w-4 h-4" />, img: "/images/FirstTrip.png", side: "right", path: "merge", position: 0.82 },
  { id: "e11", title: "Our Shared Future", date: "July 19, 2025", desc: "On July 2025, we got engaged in Central Park, surrounded by friends and family who became part of the surprise (photo credits to Brooke and Ryan!). Now, we look forward to celebrating with our loved ones at our wedding on March 2026 in Beacon, New York, and to continuing to build a life of shared adventures and laughter", icon: <Camera className="w-4 h-4" />, img: "/images/Proposal.png", side: "merge", path: "merge", position: 0.82 },
@@ -297,7 +298,7 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
 
 
      {/* Timeline Section */}
-     <section ref={containerRef} className="relative min-h-[450vh]">
+     <section ref={containerRef} className="relative min-h-[280vh]"> {/* //changed from 450*/}
        {/* Sticky left column with SVG paths */}
        <div className="sticky top-0 h-screen pointer-events-none" suppressHydrationWarning>
          <div className="absolute inset-0 flex justify-center">
@@ -419,7 +420,8 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
     e.side === "right" ? "md:ml-[40%]" : "md:ml-[22%]"
   }`}
 >
-               <div style={{ height: `${Math.max(10, Math.round(e.position * 120))}vh` }} />
+               <div style={{ height: `${Math.max(6, Math.round(e.position * CARD_SPACER_SCALE_VH))}vh` }} />
+               {/* changed from <div style={{ height: `${Math.max(10, Math.round(e.position * 120))}vh` }} />*/}
                {/* NEW: zero-height anchor to measure this card's position */}
                {isFirstDate && <div ref={firstDateRef} style={{ height: 0 }} aria-hidden />}
 
@@ -478,7 +480,7 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
 
 
          {/* Spacer to allow full path animation */}
-         <div className="h-[120vh]" />
+         <div className="h-[60vh]" />
        </div>
      </section>
 
