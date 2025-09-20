@@ -294,7 +294,7 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
            Our paths to forever
          </motion.h1>
          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15 }} className="mt-4 text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-           Scroll to watch two stories undulate, crisscross, and finally meet.
+           Scroll to watch our stories crisscross before we finally meet
          </motion.p>
        </div>
      </section>
