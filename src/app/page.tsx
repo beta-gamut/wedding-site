@@ -35,7 +35,7 @@ const EVENTS = [
  { id: "e10", title: "We took our first of many trips together", date: "Apr 13–20, 2025", desc: "So much seen on so little sleep!", icon: <Heart className="w-4 h-4" />, img: "/images/FirstTrip.png", side: "right", path: "merge", position: 0.82 },
  { id: "e11", title: "The proposal took place on Central Park rowboats by the Loeb Boathouse, with friends enlisted in the surprise", date: "July 19, 2025", desc: "Photo credits to Brooke and Ryan!", icon: <Heart className="w-4 h-4" />, img: "/images/Proposal.png", side: "merge", path: "merge", position: 0.82 },
 // { id: "e13", title: "Central Park rowboats", date: "July 19, 2025", desc: "Photo credits to Brooke and Ryan ;)", icon: <Heart className="w-4 h-4" />, img: "/images/Proposal.png", side: "merge", path: "merge", position: 0.82 },
- { id: "e12", title: "See You There!", date: "3/29/2026 - Beacon, NY", desc: "We look forward to celebrating with our loved ones at our wedding on March 29th, 2026 in Beacon, New York!", icon: <Heart className="w-4 h-4" />, img: "/images/Melissa&Constantine.png", side: "merge", path: "merge", position: 0.82 },
+ { id: "e12", title: "Now we want to celebrate!", date: "3/29/2026 - Beacon, NY", desc: "We look forward to celebrating with our loved ones at our wedding on March 29th, 2026 in Beacon, New York. See You There!", icon: <Heart className="w-4 h-4" />, img: "/images/Melissa&Constantine.png", side: "merge", path: "merge", position: 0.82 },
  ];
 
 
