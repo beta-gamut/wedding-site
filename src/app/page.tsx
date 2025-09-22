@@ -20,10 +20,10 @@ const COLORS = {
 const CARD_SPACER_SCALE_VH = 60; // was effectively 120
 
 const EVENTS = [
- { id: "e1", title: "Who We Are", date: "1987 (C) & 1992 (M)", desc: "We both grew up in Queens, spending time in the same neighborhoods without ever meeting. Our paths moved in parallel—through NYC public schools, art and architecture, and even graduate school just steps apart...", icon: <Camera className="w-4 h-4" />, img: "/images/children.png", side: "merge", path: "you", position: 0.00 },
+ { id: "e1", title: "Childhood in Queens", date: "1987 (C) & 1992 (M)", desc: "We both grew up in Queens and spent time in the same neighborhoods without ever meeting...", icon: <Camera className="w-4 h-4" />, img: "/images/children.png", side: "merge", path: "you", position: 0.00 },
  //{ id: "e2", title: "Childhood in Queens", date: "1987 (C) & 1992 (M)", desc: "", icon: <MapPin className="w-4 h-4" />, img: "/images/children.png", side: "left", path: "you", position: 0.08 },
- { id: "e2", title: "NYC High School", date: "Pre-2005 (C) & Pre-2010 (M)", desc: "", icon: <Camera className="w-4 h-4" />, img: "/images/516193714_10162281456903037_4098486317061675322_n.png", side: "right", path: "you", position: 0.18 },
- { id: "e3", title: "Art & Architecture", date: "Pre-2010 (C) & Pre-2014 (M)", desc: "", icon: <Camera className="w-4 h-4" />, img: "/images/Art&Arch.png", side: "left", path: "partner", position: 0.28 },
+ { id: "e2", title: "NYC High School", date: "Pre-2005 (C) & Pre-2010 (M)", desc: "We were too awkward to have met in high school...", icon: <Camera className="w-4 h-4" />, img: "/images/516193714_10162281456903037_4098486317061675322_n.png", side: "right", path: "you", position: 0.18 },
+ { id: "e3", title: "Art & Architecture", date: "Pre-2010 (C) & Pre-2014 (M)", desc: "...and were particularly moody artists", icon: <Camera className="w-4 h-4" />, img: "/images/Art&Arch.png", side: "left", path: "partner", position: 0.28 },
  { id: "e4", title: "Galapagos School Program", date: "Winter 2009 (C) & Summer 2009 (M)", desc: "", icon: <Camera className="w-4 h-4" />, img: "/images/IMG_6697.png", side: "right", path: "you", position: 0.38 },
  { id: "e5", title: "College Years", date: "2010 (C) & 2014 (M)", desc: "Both pivoting from architecture — he to engineering, she to school psychology — Melissa graduates from UPenn, Constantine from CCNY in engineering, just like Melissa’s father did in 1987 (Constantine's birthday!)", icon: <Camera className="w-4 h-4" />, img: "/images/CCNY&UPenn.png", side: "left", path: "you", position: 0.48 },
 // { id: "e6", title: "Wepa!", date: "2019", desc: "Constantine studied in the DR during grad school, working with FUNGLODE - there he had made his mind up about Dominicanas.", icon: <MapPin className="w-4 h-4" />, img: "/images/DominicanRepublic.png", side: "right", path: "you", position: 0.58 },
@@ -288,7 +288,7 @@ const partnerPath = buildWavyPath(SVG_WIDTH, PATH_HEIGHT, Math.PI / 2, 150, 3.2,
      <section className="relative overflow-hidden">
        <div className="max-w-5xl mx-auto px-6 pt-24 pb-16 text-center">
          <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-4xl md:text-6xl font-semibold tracking-tight">
-           Our Paths to Together
+           Our Paths to Forever
          </motion.h1>
          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15 }} className="mt-4 text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
            Scroll to Trace Our Stories
